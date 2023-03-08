@@ -3,6 +3,6 @@ REPOSITORY=/root/plus-util-front
 
 cd $REPOSITORY 
 
-sudo yarn install 
+yarn install 
 
-sudo npx pm2 reload all
+npx pm2 reload all
