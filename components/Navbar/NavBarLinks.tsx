@@ -1,8 +1,10 @@
 import Link from "next/link"
 import { links } from "./MyLinks"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BiChevronDown } from "react-icons/bi";
 import { BiChevronUp } from "react-icons/bi";
+
+
 
 export default function NavBarLinks() {
     const [heading, setHeading] = useState("")
@@ -11,8 +13,8 @@ export default function NavBarLinks() {
     return (
         <>
             {
-                links.map(link => (
-                    <div key={link.name}>
+                links.map((link,index) => (
+                    <div key={index}>
                         <div className="px-3 text-left md:cursor-pointer group">
                             <h1 className="py-7 flex justify-between items-center md:pr-0 pr-5 group" onClick={() => {
                                 heading !== link.name ? setHeading(link.name) : setHeading("")
@@ -38,11 +40,11 @@ export default function NavBarLinks() {
                                         </div>
                                         <div className="bg-plus300 p-5 grid grid-cols-3 gap-10">
                                             {
-                                                link.sublink.map((mysublinks) => (
-                                                    <div key={mysublinks.Head}>
+                                                link.sublink.map((mysublinks, index) => (
+                                                    <div key={index}>
                                                         <h1 className="text-lg font-semibold">{mysublinks.Head}</h1>
-                                                        {mysublinks.sublink.map(slink => (
-                                                            <li className="text-sm my-2.5" key={slink.name}>
+                                                        {mysublinks.sublink.map((slink,index) => (
+                                                            <li className="text-sm my-2.5" key={index}>
                                                                 <Link className="hover:text-plus200" href={slink.link}>{slink.name}</Link>
                                                             </li>
                                                         ))}
@@ -72,8 +74,8 @@ export default function NavBarLinks() {
                                                         </h1>
                                                         <div className={`${subHeading === slink.Head ? "md:hidden" : "hidden"
                                                             }`}>
-                                                            {slink.sublink.map((slink) => (
-                                                                <li className="py-3 pl-14" key={slink.link}>
+                                                            {slink.sublink.map((slink, index) => (
+                                                                <li className="py-3 pl-14" key={index}>
                                                                     <Link href={slink.link} className="hover:text-plus200">{slink.name}</Link>
                                                                 </li>
                                                             ))}

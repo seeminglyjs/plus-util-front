@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Button from "./Button";
 import NavBarLinks from "./NavBarLinks";
 import { BiMenu } from "react-icons/bi";
+import Button from './Button';
 
 
-export default function NavBar() {
+interface Authenticated {
+    authenticated : boolean
+}
+
+export default function NavBar({authenticated} : Authenticated) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -28,7 +32,14 @@ export default function NavBar() {
                     <NavBarLinks />
                 </ul>
                 <div className="md:block hidden">
-                    <Button />
+                    {!authenticated && (
+                    <span>
+                    <Link href="/login/main"><Button buttonName="login"/></Link>
+                    <span className="px-2"></span>
+                    <Link href="/join/main"><Button buttonName="join"/></Link>
+                    </span>
+                    )}
+                    {authenticated && (<Link href="/logout"><Button buttonName="logout"/></Link>)}
                 </div>
                 {/*Mobile nav*/}
                 <ul className={
@@ -40,10 +51,18 @@ export default function NavBar() {
                     </li>
                     <NavBarLinks />
                     <div className="py-5">
-                        <Button />
+                    {!authenticated && (
+                    <span>
+                    <Link href="/login/main"><Button buttonName="login"/></Link>
+                    <span className="px-2"></span>
+                    <Link href="/join/main"><Button buttonName="join"/></Link>
+                    </span>
+                    )}
+                    {authenticated && (<Link href="/logout"><Button buttonName="logout"/></Link>)}
                     </div>
                 </ul>
             </div>
         </nav>
     )
 }
+

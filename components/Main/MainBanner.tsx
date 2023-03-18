@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import mainBackgroundImage from '../../public/main/pramod-tiwari-BpmtsO4JTEw-unsplash.jpg';
+import MainDiv from "../Layout/MainDiv";
 
 export default function MainBanner() {
   const mainBannerStyle: React.CSSProperties = {
@@ -23,7 +24,7 @@ export default function MainBanner() {
   };
 
   return (
-    <div className="w-full md:shrink-0">
+    <div>
       <div
         className="max-w-full mx-auto py-56 px-4 sm:px-6 lg:px-8"
         style={mainBannerStyle}
@@ -33,7 +34,7 @@ export default function MainBanner() {
             Plus-Util[Beta]
           </h1>
           <p className="mt-4 text-xl">
-            이곳저곳 유틸리티 집합소 
+            이곳저곳 유틸리티 집합소
 
           </p>
           <button className="mt-4 bg-plus300 hover:bg-plusOrange font-semibold py-2 px-4 rounded-full shadow btn-sm">

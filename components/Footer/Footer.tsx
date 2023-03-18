@@ -25,35 +25,32 @@ export default function Footer() {
                 </div>
                 <div className="p-5">
                     <ul>
-                        <p className="font-bold text-2xl pb-4">Test1</p>
+                        <p className="font-bold text-2xl pb-4">Board</p>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test-sub1
+                            공지사항
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test-sub2
+                            업데이트
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test-sub3
-                        </li>
-                        <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test-sub4
+                            기타
                         </li>
                     </ul>
                 </div>
                 <div className="p-5">
                     <ul>
-                        <p className="font-bold text-2xl pb-4">Test2</p>
+                        <p className="font-bold text-2xl pb-4">추천유틸</p>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test2-sub1
+                            글자수 체크
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test2-sub2
+                            초성 추출
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test2-sub3
+                            요일 구하기
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test2-sub4
+                            투 포인트 알고리즘
                         </li>
                     </ul>
                 </div>
