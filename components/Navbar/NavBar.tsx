@@ -34,12 +34,12 @@ export default function NavBar({authenticated} : Authenticated) {
                 <div className="md:block hidden">
                     {!authenticated && (
                     <span>
-                    <Link href="/login/main"><Button buttonName="login"/></Link>
+                    <Link href="/login/"><Button buttonName="login"/></Link>
                     <span className="px-2"></span>
-                    <Link href="/join/main"><Button buttonName="join"/></Link>
+                    <Link href="/join/"><Button buttonName="join"/></Link>
                     </span>
                     )}
-                    {authenticated && (<Link href="/logout"><Button buttonName="logout"/></Link>)}
+                    {authenticated && (<Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout"/></Link>)}
                 </div>
                 {/*Mobile nav*/}
                 <ul className={
@@ -53,12 +53,12 @@ export default function NavBar({authenticated} : Authenticated) {
                     <div className="py-5">
                     {!authenticated && (
                     <span>
-                    <Link href="/login/main"><Button buttonName="login"/></Link>
+                    <Link href="/login/"><Button buttonName="login"/></Link>
                     <span className="px-2"></span>
-                    <Link href="/join/main"><Button buttonName="join"/></Link>
+                    <Link href="/join/"><Button buttonName="join"/></Link>
                     </span>
                     )}
-                    {authenticated && (<Link href="/logout"><Button buttonName="logout"/></Link>)}
+                    {authenticated && (<Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout"/></Link>)}
                     </div>
                 </ul>
             </div>

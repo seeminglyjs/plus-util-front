@@ -6,21 +6,20 @@ import MainSubDiv from "@/components/Layout/MainSubDiv";
 import Button from "@/components/Navbar/Button";
 import { useEffect } from "react";
 import { useRouter } from 'next/router'
-import ContentColDiv from '../../components/Layout/ContentColDiv';
-import HalfAndHalfDiv from '../../components/Layout/HalfAndHalfDiv';
+import ContentColDiv from '../components/Layout/ContentColDiv';
+import HalfAndHalfDiv from '../components/Layout/HalfAndHalfDiv';
 
 
 import { GetServerSideProps } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import Loading from "@/components/Etc/Loading";
-import { Props } from '../../interface/Auth/Props';
-import { AuthData } from '../../interface/Auth/AuthData';
+import { Props } from '../interface/Auth/Props';
+import { AuthData } from '../interface/Auth/AuthData';
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
-import NavBar from "@/components/Navbar/NavBar";
-import Footer from '../../components/Footer/Footer';
+import Footer from '../components/Footer/Footer';
 
 
-export default function LoginMain({ authData }: Props) {
+export default function Login({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
     console.log("authData name -> " + name)
     console.log("authData authorities -> " + authorities[0].authority)
@@ -49,7 +48,7 @@ export default function LoginMain({ authData }: Props) {
                                         <form method="post" action={`${process.env.API_BASE_URL}/login/action`}>
                                             <div className="mb-6">
                                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-plus200 ">아이디</label>
-                                                <input type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-plus200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" required />
+                                                <input type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-plus200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@test.com" required />
                                             </div>
                                             <div className="mb-6">
                                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-plus200">비밀번호</label>
@@ -61,7 +60,7 @@ export default function LoginMain({ authData }: Props) {
                                                 </div>
                                                 <label htmlFor="remember" className="ml-2 text-sm font-medium text-plus200">Remember me</label>
                                             </div>
-                                            <Button buttonName="login"></Button>
+                                            <Button buttonName="로그인"></Button>
                                         </form>
                                     </div>
                                 </div>
