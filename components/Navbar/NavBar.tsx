@@ -27,7 +27,7 @@ export default function NavBar({authenticated} : Authenticated) {
                 </div>
                 <ul className="md:flex hidden uppercase items-center gap-8">
                     <li>
-                        <Link href="" className="py-7 px-3 inline-block">공지사항</Link>
+                        <Link href="/notice/list" className="py-7 px-3 inline-block">공지사항</Link>
                     </li>
                     <NavBarLinks />
                 </ul>
