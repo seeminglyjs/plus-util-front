@@ -1,4 +1,3 @@
-import { setAuthData } from '../store/auth';
 
 export async function fetchAuthData(cookie: string): Promise<void> {
     const baseUrl = process.env.API_BASE_URL; // replace with your Spring Boot API endpoint base URL
@@ -14,6 +13,5 @@ export async function fetchAuthData(cookie: string): Promise<void> {
   
     if (response.ok) {
       const authData = await response.json();
-      setAuthData(authData); // store the authentication data in the Redux store
     }
   }
