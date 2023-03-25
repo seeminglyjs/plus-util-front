@@ -36,16 +36,16 @@ export default function NavBarLinks() {
                                 <div>
                                     <div className="absolute top-20 hidden group-hover:md:block hover:md:block">
                                         <div className="py-3">
-                                            <div className="w-4 h-4 left-3 absolute mt-1 bg-plus300 rotate-45"></div>
+                                            <div className="w-4 h-4 left-3 absolute mt-1 bg-plus400 rotate-45 border border-plus200"></div>
                                         </div>
-                                        <div className="bg-plus300 p-5 grid grid-cols-3 gap-10">
+                                        <div className="bg-plus400 p-5 grid grid-cols-3 gap-10 rounded border border-plus200">
                                             {
                                                 link.sublink.map((mysublinks, index) => (
                                                     <div key={index}>
                                                         <h1 className="text-lg font-semibold">{mysublinks.Head}</h1>
                                                         {mysublinks.sublink.map((slink,index) => (
                                                             <li className="text-sm my-2.5" key={index}>
-                                                                <Link className="hover:text-plus200" href={slink.link}>{slink.name}</Link>
+                                                                <Link className="hover:text-plusGreen150" href={slink.link}>{slink.name}</Link>
                                                             </li>
                                                         ))}
                                                     </div>
@@ -76,7 +76,7 @@ export default function NavBarLinks() {
                                                             }`}>
                                                             {slink.sublink.map((slink, index) => (
                                                                 <li className="py-3 pl-14" key={index}>
-                                                                    <Link href={slink.link} className="hover:text-plus200">{slink.name}</Link>
+                                                                    <Link href={slink.link} className="hover:text-plusGreen150">{slink.name}</Link>
                                                                 </li>
                                                             ))}
                                                         </div>
