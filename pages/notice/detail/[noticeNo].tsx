@@ -43,6 +43,7 @@ export default function NoticeDetail() {
 
     useEffect(() => {
         const noticeNo = router.query.noticeNo
+        const currentNo = router.query.currentPage
 
         async function getNoticeDetail(noticeNo: number) {
             const url = `${process.env.API_BASE_URL}/notice/detail?noticeNo=${noticeNo}`
@@ -78,8 +79,7 @@ export default function NoticeDetail() {
                             <div className="py-10">
                                 {
                                     noticeDetailSubDto && (
-                                    <div>
-                                    
+                                    <div className="">
                                         <div className="border border-plus250 rounded" style={{ height: "650px" }}>
                                             <div className="py-4 px-5 mx-2 border-b-2 border-plus250 flex justify-between">
                                                 <CategorySpan spanContent={noticeDetailSubDto.category}></CategorySpan>
@@ -96,7 +96,7 @@ export default function NoticeDetail() {
                                             </div>
                                         </div>
                                         
-                                        <div className="py-5 px-5 mx-2 text-right">
+                                        <div className="my-5">
                                             <BackButton></BackButton>
                                         </div>
                                     </div>

@@ -107,7 +107,7 @@ export default function NoticeList({ authData }: Props) {
                                                            <CategorySpan spanContent={notice.category}></CategorySpan> 
                                                         </td>
                                                         <td className="px-12 py-4 cursor-pointer">
-                                                            <Link href={`/notice/detail/${notice.noticeNo}`}>
+                                                            <Link href={`/notice/detail/${notice.noticeNo}?currentPage=${currentPage}`}>
                                                                 {notice.title}
                                                             </Link>
                                                         </td>
@@ -127,8 +127,8 @@ export default function NoticeList({ authData }: Props) {
                                 </div>
                                     <div className="text-right">
                                         {
-                                            authenticated && (
-                                                <Link href="/notice/write">
+                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                <Link href={`/notice/write?currentPage=${currentPage}`}>
                                                     <button className="border border-plusOrange rounded text-plus200 hover:text-white py-1 px-2 mr-2"><BiPencil className="inline"></BiPencil> 글쓰기</button>
                                                 </Link>
                                             )
