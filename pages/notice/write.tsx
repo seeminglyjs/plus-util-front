@@ -66,15 +66,16 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
             const data = {
                 noticeTitle: title,
                 noticeContent: content,
-                category: category
+                category: category,
+                currentNo:currentNo
             };
 
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Cookie: cookie ?? '',
                 },
+                credentials: 'include',
                 body: JSON.stringify(data)
             });
 
@@ -160,11 +161,10 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
 
 export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
     const authData: AuthData = await fetchAuthData(req);
-    const cookie = req.headers.cookie || "";
+    // const cookie = req.headers.cookie || "";
     return {
         props: {
             authData,
-            cookie,
         },
     };
 };

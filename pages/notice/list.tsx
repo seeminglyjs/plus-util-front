@@ -37,7 +37,8 @@ export default function NoticeList({ authData }: Props) {
                 method: "GET",
                 headers: {
                     Accept: 'application/json',
-                }
+                },
+                credentials: 'include',
             })
 
             if (!response.ok) {
