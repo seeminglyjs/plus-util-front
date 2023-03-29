@@ -28,7 +28,6 @@ type CookieState = {
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     const { name, authorities, authenticated } = authData;
-    console.log(cookie)
     // const cookies: { [key: string]: string } = {};
     // cookie.split(";").forEach((cookiePart:string) => {
     //   const [key, value] = cookiePart.trim().split("=");
@@ -48,11 +47,12 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     }
 
     const getContent = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        console.log(content)
         setContent(event.target.value);
     }
 
     const getCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setContent(event.target.value);
+        setCategory(event.target.value);
     }
 
     // 게시글 작성전에 제목과 내용을 확인한다.
@@ -87,6 +87,8 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                 const noticeWriteResponse: NoticeWriteResponse = await response.json()
                 if (!noticeWriteResponse.writeOk) {
                     setIsOpen(true);
+                }else{
+                    router.push('/notice/list');
                 }
             }
 

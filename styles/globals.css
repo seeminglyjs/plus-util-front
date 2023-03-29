@@ -13,4 +13,6 @@ body {
     color : white;
     background-color:#252422;
     font-family: 'Pretendard-Regular', sans-serif;
+    /*줄바꿈 가능하게 처리*/
+    white-space: pre-line
 }
