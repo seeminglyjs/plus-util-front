@@ -6,6 +6,7 @@ PROJECT_FOLDER=plus-util-front
 REPOSITORY=/root/plus-util-front 
 
 cd $ROOT
+mkdir test1
 rm -rf $PROJECT_FOLDER
 mkdir $PROJECT_FOLDER
 cd $REPOSITORY 
