@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: 16
 
-     # - name : pm2 Delete
-     #   run : pm2 delete plus-util
+      - name : pm2 Stop
+        run : pm2 stop plus-util
 
       # pacakge.json에 명시된 의존성을 설치한다.
       - name: Install dependencies
