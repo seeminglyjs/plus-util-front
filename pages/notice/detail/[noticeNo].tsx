@@ -114,14 +114,14 @@ export default function NoticeDetail() {
 
     const updateNoticeLink = ()=>{
         router.push({
-            pathname: '/notice/update',
+            pathname: `/notice/update/${noticeDetailSubDto?.noticeNo}`,
             query: { noticeNo: noticeDetailSubDto?.noticeNo,
                     noticeTitle: noticeDetailSubDto?.title,
                     noticeContent: noticeDetailSubDto?.content, 
                     noticeCategory: noticeDetailSubDto?.category
                 }
           },
-          `/notice/update`
+          `/notice/update/${noticeDetailSubDto?.noticeNo}`
           )
     }
 

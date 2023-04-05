@@ -36,10 +36,18 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     if(authorities[0].authority !== "ROLE_ADMIN"){
         router.push("/notice/list")
     }
+    
+    useEffect(() => {
+        const entry = performance.getEntriesByType("navigation")[0]
+        if (window.location.href === document.referrer) {
+          console.log('Page was refreshed');
+          // Do something when page is refreshed
+        }
+      }, []);
 
-    const noticeTitle = JSON.stringify(router.query.noticeTitle);
-    const noticeContent = JSON.stringify(router.query.noticeContent);
-    const noticeCategory = JSON.stringify(router.query.noticeCategory);
+    const noticeTitle : any = router.query.noticeTitle;
+    const noticeContent : any = router.query.noticeContent;
+    const noticeCategory : any = router.query.noticeCategory;
 
     const currentNo = router.query.currentPage
     const [title, setTitle] = useState("");
