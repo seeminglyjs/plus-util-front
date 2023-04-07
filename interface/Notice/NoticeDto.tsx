@@ -1,10 +1,12 @@
-import { NoticePageListDto } from "./NoticePageListDto";
 
 export interface NoticeDto {
-    pageExist: boolean,
-    currentPage: number,
-    startPage: number,
-    endPage: number,
-    totalPage: number,
-    noticePageList: NoticePageListDto
+    noticeNo: number,
+    title: string,
+    content: string,
+    writeDate: string,
+    writer: string,
+    category: string,
+    subInfo1: string,
+    subInfo2: string,
+    subInfo3: string,
 }

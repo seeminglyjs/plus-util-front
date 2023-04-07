@@ -9,7 +9,7 @@ import MajoritySubDiv from '../../components/Layout/MajoritySubDiv';
 import { BiCaretLeft } from "react-icons/bi";
 import { BiCaretRight } from "react-icons/bi";
 import { NoticePageContentDto } from "@/interface/Notice/NoticePageContentDto";
-import { NoticeDto } from "@/interface/Notice/NoticeDto";
+import { NoticeListDto } from "@/interface/Notice/NoticeListDto";
 import { useRouter } from "next/router";
 import CategorySpan from "@/components/Notice/CategorySpan";
 import { GetServerSideProps } from 'next';
@@ -45,7 +45,7 @@ export default function NoticeList({ authData }: Props) {
                 throw new Error('Failed to fetch getNoticeList data');
             }
 
-            const noticeDto: NoticeDto = await response.json();
+            const noticeDto: NoticeListDto = await response.json();
             setNoticeList(noticeDto.noticePageList.content)
             setStartPage(current => noticeDto.startPage)
             setEndPage(current => noticeDto.endPage)

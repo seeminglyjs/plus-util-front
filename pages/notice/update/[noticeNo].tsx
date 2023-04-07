@@ -16,38 +16,52 @@ import DefaultModal from "@/components/Modal/DefaultModal";
 import WriteButton from "@/components/Notice/WriteButton";
 import { useRouter } from "next/router";
 import { CookieAndAuth } from "@/interface/Auth/CookieAndAuth";
+import { NoticeDetailDto } from "@/interface/Notice/NoticeDetailDto";
+import { NoticeUpdateResponse } from "@/interface/Notice/NoticeUpdateResponse";
 
-
-interface NoticeUpdateResponse {
-    updateOk: boolean
-    noticeNo: number
-}
-
-type CookieState = {
-    [key: string]: string;
-};
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     const { name, authorities, authenticated } = authData;
+    const [entriesNavigationTimingType, setEntriesNavigationTiming] = useState("")
     const router = useRouter()
     
-    const noticeNo = Number(router.query.noticeNo);
-
     if(authorities[0].authority !== "ROLE_ADMIN"){
         router.push("/notice/list")
     }
-    
+    const noticeNo = Number(router.query.noticeNo)
+
     useEffect(() => {
-        const entry = performance.getEntriesByType("navigation")[0]
-        if (window.location.href === document.referrer) {
-          console.log('Page was refreshed');
-          // Do something when page is refreshed
-        }
+        const entries = performance.getEntriesByType("navigation")[0];
+        const entriesNavigationTiming = entries as PerformanceNavigationTiming
+        setEntriesNavigationTiming(entriesNavigationTiming.type)
       }, []);
 
-    const noticeTitle : any = router.query.noticeTitle;
-    const noticeContent : any = router.query.noticeContent;
-    const noticeCategory : any = router.query.noticeCategory;
+    useEffect(()=>{
+        const noticeNo = Number(router.query.noticeNo)
+
+        async function getNoticeDetail(noticeNo:number) {
+            const url = `${process.env.API_BASE_URL}/notice/detail?noticeNo=${noticeNo}`
+            if (noticeNo !== undefined && !Number.isNaN(noticeNo)) {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                    credentials: 'include',
+                })
+
+                const noticeDetail: NoticeDetailDto = await response.json()
+
+                setTitle(noticeDetail.noticeDto.title)
+                setContent(noticeDetail.noticeDto.content)
+                setCategory(noticeDetail.noticeDto.category);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch getNoticeDetail data');
+                }
+            }
+        }
+        getNoticeDetail(Number(noticeNo))
+    },[entriesNavigationTimingType, router.query.noticeNo])  
 
     const currentNo = router.query.currentPage
     const [title, setTitle] = useState("");
@@ -70,17 +84,8 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
 
     // 게시글 작성전에 제목과 내용을 확인한다.
     const updateNotice = async () => {
-        if(content === noticeTitle){
-            setModalContent("기존 내용과 동일합니다.")
-            setIsOpen(true);
-            return;
-        }
-
-        if (title.trim().length === 0 || content.trim().length === 0) {
-            if(title.trim().length === 0) setTitle(noticeTitle)
-            if(content.trim().length === 0) setContent(noticeContent)
-            console.error('Title or content cannot be empty');
-            setModalContent("글 내용을 확인해 주세요.")
+        if (title.trim().length <= 1 || content.trim().length <= 1) {
+            setModalContent("제목과 내용은 2글자 이상이어야 합니다.")
             setIsOpen(true);
             return;
         } else {//이상없으면
@@ -142,11 +147,11 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                         <MajorityDiv>
                             <div className="py-15">
                                 <div>
-                                    <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." defaultValue={noticeTitle}/>
+                                    <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." defaultValue={title}/>
                                 </div>
                                 <div className="my-3">
                                     <span>
-                                        <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded" defaultValue={noticeCategory}>
+                                        <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded" defaultValue={category}>
                                             <option value="notice">공지사항</option>
                                             <option value="updateNote">업데이트</option>
                                             <option value="etc">기타</option>
@@ -154,7 +159,7 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                                     </span>
                                 </div>
                                 <div className="my-5">
-                                    <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요." defaultValue={noticeContent}></textarea>
+                                    <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요." defaultValue={content}></textarea>
                                 </div>
                                 <div>
                                     {

@@ -11,38 +11,12 @@ import DefaultModal from "@/components/Modal/DefaultModal";
 import CategorySpan from "@/components/Notice/CategorySpan";
 import DeleteButton from "@/components/Notice/DeleteButton";
 import UpdateButton from "@/components/Notice/UpdateButton";
+import { DateDto } from "@/interface/Notice/DateDto";
+import { DeleteNoticeResponseDto } from "@/interface/Notice/DeleteNoticeResponseDto";
+import { NoticeDetailDto } from "@/interface/Notice/NoticeDetailDto";
+import { NoticeDto } from "@/interface/Notice/NoticeDto";
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
-
-
-interface DateDto {
-    day: string,
-    time: string,
-}
-
-interface NoticeDto {
-    noticeNo: number,
-    title: string,
-    content: string,
-    writeDate: string,
-    writer: string,
-    category: string,
-    subInfo1: string,
-    subInfo2: string,
-    subInfo3: string,
-}
-
-interface NoticeDetailDto {
-    noticeDto: NoticeDto
-    dateDto: DateDto
-    updateRoleCheck: boolean
-
-}
-
-interface DeleteNoticeResponseDto{
-    deleteOk : boolean,
-    currentPage: number
-}
 
 
 export default function NoticeDetail() {
@@ -116,9 +90,9 @@ export default function NoticeDetail() {
         router.push({
             pathname: `/notice/update/${noticeDetailSubDto?.noticeNo}`,
             query: { noticeNo: noticeDetailSubDto?.noticeNo,
-                    noticeTitle: noticeDetailSubDto?.title,
-                    noticeContent: noticeDetailSubDto?.content, 
-                    noticeCategory: noticeDetailSubDto?.category
+                    // noticeTitle: noticeDetailSubDto?.title,
+                    // noticeContent: noticeDetailSubDto?.content, 
+                    // noticeCategory: noticeDetailSubDto?.category
                 }
           },
           `/notice/update/${noticeDetailSubDto?.noticeNo}`

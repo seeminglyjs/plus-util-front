@@ -40,8 +40,8 @@ export default function Join({ authData }: Props) {
     const [password, setPassword] = useState("");
     const [vaildPassword, setVaildPassword] = useState(false);
     function validatePassword(password: string) {
-        // const regex = /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
-        const regex = /^\d{8,}$/;
+        const regex = /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
+        // const regex = /^\d{8,}$/;
         return regex.test(password);
     }
     function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
