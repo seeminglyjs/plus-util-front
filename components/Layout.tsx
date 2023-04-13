@@ -19,7 +19,7 @@ export default function Layout ({ children }: LayoutProps){
       setAuthenticated(current => authData.authenticated);
     };
     getAuthData();
-  }, []);
+  }, [children]); {/*자식요소 변경이 되면 인증 정보를 가져온다. */}
 
     return (
       <div>
