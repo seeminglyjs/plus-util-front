@@ -1,5 +1,5 @@
 
-import BackButton from "@/components/Etc/BackButton";
+import BackButton from "@/components/Etc/Button/BackButton";
 import Loading from "@/components/Etc/Loading";
 import ContentColDiv from "@/components/Layout/ContentColDiv";
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";

@@ -10,7 +10,7 @@ import ContentColDiv from "@/components/Layout/ContentColDiv";
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
-import BackButton from "@/components/Etc/BackButton";
+import BackButton from "@/components/Etc/Button/BackButton";
 import { useState, useEffect } from 'react';
 import DefaultModal from "@/components/Modal/DefaultModal";
 import WriteButton from "@/components/Notice/WriteButton";

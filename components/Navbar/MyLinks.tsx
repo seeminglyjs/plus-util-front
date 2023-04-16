@@ -3,19 +3,15 @@ export const links = [
         {
             name: '암호화', submenu: true, sublink: [
                 {
-                    Head: "AES 암호화",
+                    Head: "AES",
                     sublink: [
-                        { name: "AES 키생성", link: "/" },
-                        { name: "AES 암호화", link: "/" },
-                        { name: "AES 복호화", link: "/" },
+                        { name: "암호화 알고리즘", link: "/encrypt/aes" },
                     ]
                 },
                 {
                     Head: "RSA 암호화",
                     sublink: [
-                        { name: "RSA 키생성", link: "/" },
-                        { name: "RSA 암호화", link: "/" },
-                        { name: "RSA 복호화", link: "/" },
+                        { name: "암호화 알고리즘", link: "/encrypt/rsa" },
                     ]
                 },
             ]
