@@ -22,7 +22,7 @@ const CopyButton: FC<CopyButtonProps> = ({ text }) => {
 
     return (
         <div className="inline-block p-1 my-2 hover:">
-            <button id="plus-copy-button" data-clipboard-text={text} onClick={handleCopyClick}><BiCopy className="inline text-plusOrange"></BiCopy></button>
+            <button type="button" id="plus-copy-button" data-clipboard-text={text} onClick={handleCopyClick}><BiCopy className="inline text-plusOrange"></BiCopy></button>
         </div>
     );
 };

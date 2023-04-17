@@ -13,13 +13,18 @@ import { BiKey } from "react-icons/bi";
 import Accordion from '../../components/Etc/Accordion';
 
 interface RsaEncryptResponseDto {
-    rsaPublicKey : string,
-    encryptContent : string
+    rsaPublicKey: string,
+    encryptContent: string
 }
 
 interface RsaDecryptResponseDto {
-    rsaPrivateKey : string,
-    decryptContent : string
+    rsaPrivateKey: string,
+    decryptContent: string
+}
+
+interface RsaKeyMakeResponseDto {
+    publicKey: string,
+    privateKey: string
 }
 
 
@@ -28,7 +33,7 @@ export default function Rsa() {
     const [rsaPublicKey, setRsaPublicKey] = useState("");
     const [rsaPrivateKey, setRsaPrivateKey] = useState("");
     const [rsaContent, setRsaContent] = useState("");
-    const [rsaResult, setRsaResult] = useState("적절합 값을 먼저 입력해주세요.");
+    const [rsaResult, setRsaResult] = useState("적절한 값을 먼저 입력해주세요.");
 
     const rsaWayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
@@ -51,11 +56,11 @@ export default function Rsa() {
     }
 
     function isValidRsaPublicKey(rsaPublicKey: string) {
-        return /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{16}$/.test(rsaPublicKey);
+        return rsaPublicKey.length == 392;
     }
 
     function isValidRsaPrivateKey(rsaPrivateKey: string) {
-        return /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{32}$/.test(rsaPrivateKey);
+        return rsaPrivateKey.length == 1624;
     }
 
     function isValidRsaContent(rsaContent: string) {
@@ -71,16 +76,48 @@ export default function Rsa() {
         } else return false;
     }
 
+    const rsaKeyMake = async () => {
+        const url = `${process.env.API_BASE_URL}/enc/rsa/key/make`
 
-    const aesRequestSend = async () => {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        })
+
+        if (!response.ok) {
+            const errorMessage = `HTTP error! Status: ${response.status}`;
+            console.error(errorMessage);
+            return;
+        } else {
+            const rsaKeyMakeResponseDto: RsaKeyMakeResponseDto = await response.json()
+            setRsaPublicKey(rsaKeyMakeResponseDto.publicKey)
+            setRsaPrivateKey(rsaKeyMakeResponseDto.privateKey)
+        }
+    }
+
+
+    const rsaRequestSend = async () => {
         if (rsaRequestCheck()) {
             const requestType = rsaWay;
+            let data = null
+            const url = `${process.env.API_BASE_URL}/enc/rsa/content/${requestType}`
+            if(requestType === 'encrypt'){
+                data = {
+                    rsaPublicKey : rsaPublicKey,
+                    rsaBeforeContent : rsaContent
+                };
+            }else if(requestType === 'decrypt'){
+                data = {
+                    rsaPrivateKey : rsaPrivateKey,
+                    rsaAfterContent : rsaContent
+                };
+            }
 
-            const url = `${process.env.API_BASE_URL}/enc/rsa/${requestType}`
-            const data = {
-
-            };
-
+            if(data === null) return
+            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -119,7 +156,7 @@ export default function Rsa() {
                                         RSA암호는 공개키 암호시스템의 하나로, 암호화뿐만 아니라 전자서명이 가능한 최초의 알고리즘으로 알려져 있다. RSA가 갖는 전자서명 기능은 인증을 요구하는 전자 상거래 등에 RSA의 광범위한 활용을 가능하게 하였다.
                                         1978년 로널드 라이베스트(Ron Rivest), 아디 샤미르(Adi Shamir), 레너드 애들먼(Leonard Adleman)의 연구에 의해 체계화되었으며, RSA라는 이름은 이들 3명의 이름 앞글자를 딴 것이다. 이 세 발명자는 이 공로로 2002년 튜링상을 수상했다. 그러나 RSA 방식을 제일 먼저 개발한 사람은 영국 GCHQ에 근무하던 수학자였으며, 이보다 빠른 1973년도에 개발하게 된다. 이 내용은 GCHQ에서 비밀로 취급되었으며, 이후 1997년 세상으로 발표되게 된다.
                                         RSA 암호체계의 안정성은 큰 숫자를 소인수 분해하는 것이 어렵다는 것에 기반을 두고 있다. 그러므로 큰 수의 소인수 분해를 획기적으로 빠르게 할 수 있는 알고리즘이 발견된다면 이 암호 체계는 가치가 떨어질 것이다. 1993년 피터 쇼어는 쇼어 알고리즘을 발표하여, 양자 컴퓨터를 이용하여 임의의 정수를 다항 시간 안에 소인수 분해하는 방법을 발표하였다. 따라서 양자 컴퓨터가 본격적으로 실용화되면 RSA 알고리즘은 무용지물이 될 것이다. 그러나 양자 컴퓨터가 이 정도 수준으로 실용화되려면 아직 여러 해가 더 필요할 것으로 보인다.
-                                        RSA 암호화 알고리즘은 1983년에 발명자들이 소속되어 있던 매사추세츠 공과대학교(MIT)에 의해 미국에 특허로 등록되었고, 2000년 9월 21일에 그 특허가 만료되었다.
+                                        RSA 암호화 알고리즘은 1983년에 MIT 발명자들에 의해 미국에 특허로 등록되었고, 2000년 9월 21일에 그 특허가 만료되었다.
                                     </p>
                                     <br />
                                     <p >
@@ -127,7 +164,6 @@ export default function Rsa() {
                                     </p>
                                 </Accordion>
                             </div>
-
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
@@ -146,16 +182,22 @@ export default function Rsa() {
                                                     </select>
                                                 </div>
                                                 <div className="flex justify-center">
-                                                <button type="button" className="py-2.5 px-5 mr-2 mt-6 mb-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200">키 생성 <BiKey className="inline"></BiKey></button>
+                                                    <button onClick={rsaKeyMake} type="button" className="py-2.5 px-5 mr-2 mt-6 mb-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200">키 생성 <BiKey className="inline"></BiKey></button>
                                                 </div>
-                                                <div className="sm:col-span-2">
+                                                <div className="sm:col-span-2 relative">
                                                     <label htmlFor="rsaPublicKey" className="block mb-2 text-sm font-medium text-white">RSA PublicKey</label>
-                                                    <input onChange={rsaPublicKeyChange} type="text" name="rsaPublicKey" id="rsaPublicKey" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="공개키 정보" value={rsaPublicKey} />
+                                                    <input onChange={rsaPublicKeyChange} type="text" name="rsaPublicKey" id="rsaPublicKey" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-5" placeholder="공개키 정보" value={rsaPublicKey} />
+                                                    <div className="absolute bottom-0 right-0 mr-2 mb-2">
+                                                        <CopyButton text={rsaPublicKey}></CopyButton>
+                                                    </div>
                                                     <p className="text-xs mt-1 text-plusGreen100">{rsaPublicKey.length} Byte </p>
                                                 </div>
-                                                <div className="sm:col-span-2">
+                                                <div className="sm:col-span-2 relative">
                                                     <label htmlFor="rsaPrivateKey" className="block mb-2 text-sm font-medium text-white">RSA PrivateKey</label>
-                                                    <input onChange={rsaPrivateKeyChange} type="text" name="rsaPrivateKey" id="rsaPrivateKey" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="비밀키 정보" value={rsaPrivateKey} />
+                                                    <input onChange={rsaPrivateKeyChange} type="text" name="rsaPrivateKey" id="rsaPrivateKey" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-5" placeholder="비밀키 정보" value={rsaPrivateKey} />
+                                                    <div className="absolute bottom-0 right-0 mr-2 mb-2">
+                                                        <CopyButton text={rsaPrivateKey}></CopyButton>
+                                                    </div>
                                                     <p className="text-xs mt-1 text-plusGreen100">{rsaPrivateKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
@@ -165,7 +207,7 @@ export default function Rsa() {
                                                 </div>
                                             </div>
                                             <div className="text-center">
-                                                <button onClick={aesRequestSend} type="button" className=" bg-plusGreen100 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
+                                                <button onClick={rsaRequestSend} type="button" className=" bg-plusGreen100 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
                                                     확인
                                                 </button>
                                             </div>
