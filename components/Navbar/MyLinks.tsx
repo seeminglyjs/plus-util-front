@@ -20,7 +20,7 @@ export const links = [
             {
                 Head: "시간",
                 sublink: [
-                    { name: "요일 구하기", link: "/" },
+                    { name: "요일 구하기", link: "/util/time/dayoftheweek" },
                     { name: "날짜 차이 계산", link: "/" },
                 ]
             },
