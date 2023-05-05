@@ -7,7 +7,7 @@ export default function template(){
     return(
         <MainDiv>
             <MainSubDiv>
-
+                
             </MainSubDiv>
         </MainDiv>
     )

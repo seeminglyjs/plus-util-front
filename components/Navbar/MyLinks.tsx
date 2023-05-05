@@ -27,10 +27,7 @@ export const links = [
             {
                 Head: "문자",
                 sublink: [
-                    { name: "글자 바이트 구하기", link: "/" },
-                    { name: "한글 초성 추출", link: "/" },
-                    { name: "글자 수 확인", link: "/" },
-                    { name: "대소문자 변경", link: "/" },
+                    { name: "텍스트 도구", link: "/util/text/textutil" },
                     { name: "문자열 유사성 확인", link: "/" },
                 ]
             },
