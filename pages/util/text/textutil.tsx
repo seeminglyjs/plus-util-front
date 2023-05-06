@@ -9,11 +9,24 @@ import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import { useState } from 'react';
 import { BiPointer, BiText } from "react-icons/bi";
+import { MouseEvent } from 'react';
+import CopyButton from "@/components/Etc/Button/CopyButton";
+
+interface StringInitialResponseDto {
+    stringContent : string,
+    initialString : string
+}
+
+interface StringConvertCaseResponseDto {
+    stringContent : string,
+    upperOrLower : string,
+    convertStringContent : string
+}
 
 export default function TextUtil() {
     const [textContent, setTextContet] = useState("");
     const [textByte, setTextByte] = useState(0);
-    const [textCase, setTextCase] = useState("대문자")
+    const [resultData, setResultData] = useState("");
 
     function textContetChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         let value = event.target.value;
@@ -23,14 +36,28 @@ export default function TextUtil() {
         setTextContet(value)
     }
 
-    const textUtilRequestSend = async () => {
+    const textUtilRequestSend = async (requestNumber:number, event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault(); //a 태그 동작 막기
         let data = null
-        const url = `${process.env.API_BASE_URL}/util/time/calculate/day`
-        data = {
-            startDateStr: "",
-            endDateStr: ""
-        };
-
+        let url = `${process.env.API_BASE_URL}/util/string/`
+        if(requestNumber == 1){//초성추출
+            url = url + 'initial';
+            data = {
+                stringContent: textContent,
+            };
+        }else if(requestNumber == 2){//대문자 변환
+            url = url + 'convert/case';
+            data = {
+                stringContent: textContent,
+                upperOrLower: 'upper'
+            };
+        }else if(requestNumber == 3){//소문자 변환
+            url = url + 'convert/case';
+            data = {
+                stringContent: textContent,
+                upperOrLower: 'lower'
+            };
+        }
         if (data === null) return
         const response = await fetch(url, {
             method: 'POST',
@@ -46,10 +73,17 @@ export default function TextUtil() {
             console.error(errorMessage);
             return;
         } else {
-            // const timeCalculateResponseDto: TimeCalculateResponseDto = await response.json()
-            // setResultData(timeCalculateResponseDto.calculateDay)
+            if(requestNumber == 1){//초성추출
+                const stringInitialResponseDto: StringInitialResponseDto = await response.json()
+                setResultData(stringInitialResponseDto.initialString);
+            }else if(requestNumber == 2 || requestNumber == 3){ //대소문자 일경우
+                const stringConvertCaseResponseDto: StringConvertCaseResponseDto = await response.json()
+                setResultData(stringConvertCaseResponseDto.convertStringContent);
+            }
+            
         }
     }
+
 
     return (
         <MainDiv>
@@ -62,15 +96,15 @@ export default function TextUtil() {
                                             <span className="text-xl font-bold text-white text-center mr-1">변환 리스트</span><BiPointer className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiPointer>
                                 </div>
                                 <div className={DefaultClassNames.listGroupDefaultDiv}>
-                                    <a href="" className={DefaultClassNames.listGroupDefaultA}>
+                                    <a href="" onClick={(event) => textUtilRequestSend(1, event)} className={DefaultClassNames.listGroupDefaultA}>
                                         초성추출 
                                         <p className="text-xs mt-1 text-plusGreen100">텍스트 중 한글이 있을 경우 초성만 추출하여 결과로 보여줍니다.</p>
                                     </a>
-                                    <a href="" className={DefaultClassNames.listGroupDefaultA}>
+                                    <a href="" onClick={(event) => textUtilRequestSend(2, event)} className={DefaultClassNames.listGroupDefaultA}>
                                         대문자변환 
                                         <p className="text-xs mt-1 text-plusGreen100">텍스트 중 영문을 대문자로 변경해줍니다.</p>
                                     </a>
-                                    <a href="" className={DefaultClassNames.listGroupDefaultA}>
+                                    <a href="" onClick={(event) => textUtilRequestSend(3, event)} className={DefaultClassNames.listGroupDefaultA}>
                                         소문자변환 
                                         <p className="text-xs mt-1 text-plusGreen100">텍스트 중 영문을 소문자로 변경해줍니다.</p>
                                     </a>
@@ -106,7 +140,10 @@ export default function TextUtil() {
                                 <h2 className="mb-4 text-xl font-bold text-white py-2 pl-2">결과 확인</h2>
                                 <div className="break-all border border-plusGreen100 py-5 rounded-2xl bg-white relative">
                                     <div className="text-black p-3" id="">
-                                        { }
+                                        {resultData}
+                                    </div>
+                                    <div className="absolute bottom-0 right-0 mr-2 mb-2">
+                                        <CopyButton text={resultData}></CopyButton>
                                     </div>
                                 </div>
                             </div>
