@@ -121,7 +121,7 @@ export default function TextUtil() {
 
                                         <div className="sm:col-span-2">
                                             <label htmlFor="textContent" className="block mb-2 text-sm font-medium text-white">텍스트</label>
-                                            <textarea rows={30} onChange={textContetChange} id="textContent" name="textContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요."></textarea>
+                                            <textarea rows={30} onChange={textContetChange} id="textContent" name="textContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={textContent}></textarea>
                                             <p className="mt-1 text-plusGreen100">{textContent.length} 자  / 최대 5000자 | {textByte} Byte</p>
                                         </div>
                                     </div>

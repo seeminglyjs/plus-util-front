@@ -28,7 +28,7 @@ export const links = [
                 Head: "문자",
                 sublink: [
                     { name: "텍스트 도구", link: "/util/text/textutil" },
-                    { name: "문자열 유사성 확인", link: "/" },
+                    { name: "문자열 유사성 확인", link: "/util/text/textsimilarity" },
                 ]
             },
             {
