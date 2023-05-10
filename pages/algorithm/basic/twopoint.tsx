@@ -12,45 +12,52 @@ import { BiPointer, BiText } from "react-icons/bi";
 import { MouseEvent } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 
-
-interface StringSimilarityResponseDto {
-    firstContent: string,
-    secondContent: string,
-    similarity: string
+interface StringInitialResponseDto {
+    stringContent : string,
+    initialString : string
 }
 
-export default function TextSimilarity() {
-    const [firstContent, setFirstContent] = useState("");
-    const [secondContent, setSecondContent] = useState("");
-    
-    const [textByte1, setTextByte1] = useState(0);
-    const [textByte2, setTextByte2] = useState(0);
+interface StringConvertCaseResponseDto {
+    stringContent : string,
+    upperOrLower : string,
+    convertStringContent : string
+}
+
+export default function TwoPointer() {
+    const [textContent, setTextContet] = useState("");
+    const [textByte, setTextByte] = useState(0);
     const [resultData, setResultData] = useState("");
 
-    function textFirstContetChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    function textContetChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         let value = event.target.value;
         const encoder = new TextEncoder();
         value = value.substring(0, 5000)
-        setTextByte1(encoder.encode(value).length)
-        setFirstContent(value)
+        setTextByte(encoder.encode(value).length)
+        setTextContet(value)
     }
 
-    function textSecondContetChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        let value = event.target.value;
-        const encoder = new TextEncoder();
-        value = value.substring(0, 5000)
-        setTextByte2(encoder.encode(value).length)
-        setSecondContent(value)
-    }
-
-    const textSimilarityRequestSend = async () => {
+    const textUtilRequestSend = async (requestNumber:number, event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault(); //a 태그 동작 막기
         let data = null
-        let url = `${process.env.API_BASE_URL}/util/string/similarity`
-        data = {
-            firstContent: firstContent,
-            secondContent: secondContent
-        };
-
+        let url = `${process.env.API_BASE_URL}/util/string/`
+        if(requestNumber == 1){//초성추출
+            url = url + 'initial';
+            data = {
+                stringContent: textContent,
+            };
+        }else if(requestNumber == 2){//대문자 변환
+            url = url + 'convert/case';
+            data = {
+                stringContent: textContent,
+                upperOrLower: 'upper'
+            };
+        }else if(requestNumber == 3){//소문자 변환
+            url = url + 'convert/case';
+            data = {
+                stringContent: textContent,
+                upperOrLower: 'lower'
+            };
+        }
         if (data === null) return
         const response = await fetch(url, {
             method: 'POST',
@@ -66,8 +73,14 @@ export default function TextSimilarity() {
             console.error(errorMessage);
             return;
         } else {
-            const stringSimilarityResponseDto: StringSimilarityResponseDto = await response.json()
-            setResultData(stringSimilarityResponseDto.similarity);
+            if(requestNumber == 1){//초성추출
+                const stringInitialResponseDto: StringInitialResponseDto = await response.json()
+                setResultData(stringInitialResponseDto.initialString);
+            }else if(requestNumber == 2 || requestNumber == 3){ //대소문자 일경우
+                const stringConvertCaseResponseDto: StringConvertCaseResponseDto = await response.json()
+                setResultData(stringConvertCaseResponseDto.convertStringContent);
+            }
+            
         }
     }
 
@@ -85,25 +98,13 @@ export default function TextSimilarity() {
                                 <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">문자열 유사성 확인</span><BiText className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiText>
+                                            <span className="text-xl font-bold text-white text-center mr-1">투 포인트 알고리즘</span><BiText className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiText>
                                         </div>
 
-                                        <div className="sm:col-span-2 mb-5">
-                                            <label htmlFor="firstContent" className="block mb-2 text-sm font-medium text-white">첫번째 문자열</label>
-                                            <textarea rows={15} onChange={textFirstContetChange} id="firstContent" name="firstContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={firstContent}></textarea>
-                                            <p className="mt-1 text-xs text-plusGreen100">{firstContent.length} 자  / 최대 5000자 | {textByte1} Byte</p>
-                                        </div>
-
-                                        <div className="sm:col-span-2 mt-5">
-                                            <label htmlFor="secondContent" className="block mb-2 text-sm font-medium text-white">두번째 문자열</label>
-                                            <textarea rows={15} onChange={textSecondContetChange} id="secondContent" name="secondContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={secondContent}></textarea>
-                                            <p className="mt-1 text-xs text-plusGreen100">{secondContent.length} 자  / 최대 5000자 | {textByte2} Byte</p>
-                                        </div>
-
-                                        <div className="text-center">
-                                            <button onClick={textSimilarityRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
-                                                확인
-                                            </button>
+                                        <div className="sm:col-span-2">
+                                            <label htmlFor="textContent" className="block mb-2 text-sm font-medium text-white">텍스트</label>
+                                            <textarea rows={30} onChange={textContetChange} id="textContent" name="textContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={textContent}></textarea>
+                                            <p className="mt-1 text-plusGreen100">{textContent.length} 자  / 최대 5000자 | {textByte} Byte</p>
                                         </div>
                                     </div>
                                 </div>

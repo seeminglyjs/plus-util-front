@@ -34,7 +34,7 @@ export const links = [
             {
                 Head: "기타",
                 sublink: [
-                    { name: "나의 아이피 확인", link: "/" },
+                    { name: "나의 아이피 확인", link: "/util/ip/my" },
                 ]
             },
             {
@@ -49,7 +49,7 @@ export const links = [
             {
                 Head: "Basic",
                 sublink: [
-                    { name: "투 포인트 알고리즘", link: "/" },
+                    { name: "투 포인트 알고리즘", link: "/algorithm/basic/twopoint" },
                     { name: "슬라이딩 윈도우", link: "/" },
                 ]
             },
