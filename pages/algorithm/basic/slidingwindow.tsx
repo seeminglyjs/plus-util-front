@@ -13,41 +13,41 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { BiBong, BiText } from "react-icons/bi";
 
-interface TwoPointerResponseDto {
-    twoPointerArr: string,
-    twoPointerTarget: string,
-    twoPointerResult: bigint
+interface SlidingWindowResponseDto {
+    slidingWindowArr: string,
+    slidingWindowRange: string,
+    slidingWindowResult: bigint
 }
 
 
-export default function TwoPointer() {
-    const [twoPointerArr, setTwoPointerArr] = useState("");
-    const [twoPointerTarget, setTwoPointerTarget] = useState("");
+export default function SlidingWindow() {
+    const [slidingWindowArr, setSlidingWindowArr] = useState("");
+    const [slidingWindowRange, setSlidingWindowRange] = useState("");
     const [resultData, setResultData] = useState("");
 
-    function textChangeTwoPointerArr(event: React.ChangeEvent<HTMLInputElement>) {
+    function textChangeSlidingWindowArr(event: React.ChangeEvent<HTMLInputElement>) {
         let value = event.target.value;
         value = value.substring(0, 100)
-        if(InputRegexFunction(value, InputRegex.TwoPointerArr)){
-            setTwoPointerArr(value)
-        }else if(value == "") setTwoPointerArr("");
+        if(InputRegexFunction(value, InputRegex.SlidingWindowArr)){
+            setSlidingWindowArr(value)
+        }else if(value == "") setSlidingWindowArr("");
     }
 
-    function textChangeTwoPointerTarget(event: React.ChangeEvent<HTMLInputElement>) {
+    function textChangeSlidingWindowRange(event: React.ChangeEvent<HTMLInputElement>) {
         let value = event.target.value;
-        if(InputRegexFunction(value, InputRegex.TwoPointerTarget)){
+        if(InputRegexFunction(value, InputRegex.SlidingWindowRange)){
             if(value.length >=2 ) value.substring(0,1)
-            setTwoPointerTarget(value)
-        }else if(value == "") setTwoPointerTarget("");
+            setSlidingWindowRange(value)
+        }else if(value == "") setSlidingWindowRange("");
     }
 
-    const twoPointerRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/two/pointer/`
-        if(twoPointerArr === "") return
-        if(twoPointerTarget === "") return
+    const slidingWindowRequestSend = async () => {
+        const url = `${process.env.API_BASE_URL}/algorithm/sliding/window`
+        if(slidingWindowArr === "") return
+        if(slidingWindowRange === "") return
         const data = {
-            twoPointerArr: twoPointerArr,
-            twoPointerTarget: twoPointerTarget
+            slidingWindowArr: slidingWindowArr,
+            slidingWindowRange: slidingWindowRange
         }
 
         if (data === null) return
@@ -65,8 +65,8 @@ export default function TwoPointer() {
             console.error(errorMessage);
             return;
         } else {
-            const TwoPointerResponseDto: TwoPointerResponseDto = await response.json()
-            setResultData(TwoPointerResponseDto.twoPointerResult.toString());
+            const slidingWindowResponseDto: SlidingWindowResponseDto = await response.json()
+            setResultData(slidingWindowResponseDto.slidingWindowResult.toString());
         }
     }
 
@@ -83,19 +83,19 @@ export default function TwoPointer() {
                                 <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">투 포인트 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
+                                            <span className="text-xl font-bold text-white text-center mr-1">슬라이딩 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
                                         </div>
                                         <div className="sm:col-span-2 mb-5">
-                                            <label htmlFor="twoPointerTarget" className="block mb-2 text-sm font-medium text-white">포인트 합계</label>
-                                            <input onChange={textChangeTwoPointerTarget} type="text" name="twoPointerTarget" id="twoPointerTarget" className={DefaultClassNames.FormDefaultChangeInput} placeholder="포인터 ex)6" value={twoPointerTarget} />
+                                            <label htmlFor="slidingWindowRange" className="block mb-2 text-sm font-medium text-white">윈도우 크기</label>
+                                            <input onChange={textChangeSlidingWindowRange} type="text" name="slidingWindowRange" id="slidingWindowRange" className={DefaultClassNames.FormDefaultChangeInput} placeholder="포인터 ex)6" value={slidingWindowRange} />
                                         </div>
                                         <div className="sm:col-span-2 mt-5">
-                                            <label htmlFor="twoPointerArr" className="block mb-2 text-sm font-medium text-white">탐색 배열</label>
-                                            <input onChange={textChangeTwoPointerArr} type="text" name="twoPointerArr" id="twoPointerArr" className={DefaultClassNames.FormDefaultChangeInput} placeholder="수열 ex)3456678" value={twoPointerArr} />
+                                            <label htmlFor="slidingWindowArr" className="block mb-2 text-sm font-medium text-white">탐색 배열</label>
+                                            <input onChange={textChangeSlidingWindowArr} type="text" name="slidingWindowArr" id="slidingWindowArr" className={DefaultClassNames.FormDefaultChangeInput} placeholder="수열 ex)3456678" value={slidingWindowArr} />
                                         </div>
 
                                         <div className="text-center">
-                                                <button onClick={twoPointerRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                                <button onClick={slidingWindowRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                     확인
                                                 </button>
                                         </div>

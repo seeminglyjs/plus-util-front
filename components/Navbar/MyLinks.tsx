@@ -50,7 +50,7 @@ export const links = [
                 Head: "Basic",
                 sublink: [
                     { name: "투 포인트 알고리즘", link: "/algorithm/basic/twopoint" },
-                    { name: "슬라이딩 윈도우", link: "/" },
+                    { name: "슬라이딩 윈도우", link: "/algorithm/basic/slidingwindow" },
                 ]
             },
             {

@@ -79,7 +79,11 @@ export default function MyIp({ myIpCheckResponseDto }: Props) {
 
 
 export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
-    const url = `${process.env.API_BASE_URL}/util/etc/ip/my`
+    const url = `${process.env.API_BASE_URL}/util/etc/ip/my`;
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    console.log(clientIp)
+
     const response = await fetch(url, {
         method: 'GET',
         credentials: 'include',
@@ -89,7 +93,7 @@ export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = asy
         const errorMessage = `HTTP error! Status: ${response.status}`;
         console.error(errorMessage);
     }
-    const myIpCheckResponseDto: MyIpCheckResponseDto = await response.json()
+    const myIpCheckResponseDto: MyIpCheckResponseDto = await response.json();
     return {
         props: {
             myIpCheckResponseDto,
