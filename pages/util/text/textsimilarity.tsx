@@ -8,16 +8,9 @@ import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import { useState } from 'react';
-import { BiPointer, BiText } from "react-icons/bi";
-import { MouseEvent } from 'react';
+import { BiText } from "react-icons/bi";
 import CopyButton from "@/components/Etc/Button/CopyButton";
-
-
-interface StringSimilarityResponseDto {
-    firstContent: string,
-    secondContent: string,
-    similarity: string
-}
+import { StringSimilarityResponseDto } from "@/interface/Util/Text/StringSimilarityResponseDto";
 
 export default function TextSimilarity() {
     const [firstContent, setFirstContent] = useState("");

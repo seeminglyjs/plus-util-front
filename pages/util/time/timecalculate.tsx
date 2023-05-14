@@ -8,13 +8,11 @@ import MainDiv from "@/components/Layout/MainDiv";
 import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
+import { InputRegex } from "@/components/Regex/InputRegex";
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
+import { TimeCalculateResponseDto } from "@/interface/Util/Time/TimeCalculateResponseDto";
 import { useState } from "react";
 import { BiCalendarCheck } from "react-icons/bi";
-
-
-interface TimeCalculateResponseDto {
-    calculateDay: string
-}
 
 export default function TimeCalculate() {
 
@@ -40,9 +38,7 @@ export default function TimeCalculate() {
     }
 
     function isValidDate(dateString: string, flagNum: number) {
-        // 정규식으로 yyyyMMdd 형식인지 확인
-        const dateFormat = /^\d{4}(0[1-9]|1[0-2])(0[1-9]|[1-2]\d|3[0-1])$/;
-        if (!dateFormat.test(dateString)) {
+        if (!InputRegexFunction(dateString, InputRegex.DateyyyyMMdd)) {
             if (flagNum == 1) {
                 setStartDateText("시작날짜 형식이 올바르지 않습니다. ex) 20210103")
                 setSendStartFlag(false)
@@ -67,7 +63,7 @@ const timeCalculateRequestSend = async () => {
     if(startDateStr > endDateStr) {
         setStartDateText("시작날짜가 종료날짜 보다 큽니다.")
         return;
-    }
+    }else setStartDateText("올바른 형식입니다.")
     if (sendStartFlag && sendEndFlag) {
         data = {
             startDateStr: startDateStr,

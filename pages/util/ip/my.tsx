@@ -6,22 +6,25 @@ import HalfAndHalfDiv from "@/components/Layout/HalfAndHalfDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
 import MainDiv from "@/components/Layout/MainDiv";
 import MainSubDiv from "@/components/Layout/MainSubDiv";
-import { GetServerSideProps } from "next";
-import { ParsedUrlQuery } from "querystring";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { BiBuildingHouse, BiText } from "react-icons/bi";
 
 
-interface Props {
-    myIpCheckResponseDto: MyIpCheckResponseDto;
-}
+export default function MyIp() {
+    const [ipInfo, setIpInfo] = useState("확인중...");
+    const [countryCode, setCountryCode] = useState("확인중...");
+    const [countryName, setCountryName] = useState("확인중...");
 
-interface MyIpCheckResponseDto {
-    ip: string,
-    country: string
 
-}
-
-export default function MyIp({ myIpCheckResponseDto }: Props) {
+    useEffect(() => {  
+        const res = axios.get('https://geolocation-db.com/json/')
+        .then((res) => {
+            setIpInfo(res.data.IPv4)
+            setCountryCode(res.data.country_code)
+            setCountryName(res.data.country_name)
+        })
+    }, [])
 
     return (
         <MainDiv>
@@ -32,6 +35,7 @@ export default function MyIp({ myIpCheckResponseDto }: Props) {
 
                         </HalfAndHalfDiv>
                         <HalfDiv>
+
                             <div className="pt-48 py-15">
                                 <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
@@ -43,10 +47,10 @@ export default function MyIp({ myIpCheckResponseDto }: Props) {
                                             <h2 className="mb-4 text-m font-bold text-white py-2 pl-2">아이피 정보</h2>
                                             <div className="break-all border border-plusGreen100 py-5 rounded-2xl bg-white relative">
                                                 <div className="text-black p-3 text-center" id="">
-                                                    {myIpCheckResponseDto.ip}
+                                                    {ipInfo}
                                                 </div>
                                                 <div className="absolute bottom-0 right-0 mr-2 mb-2">
-                                                    <CopyButton text={myIpCheckResponseDto.ip}></CopyButton>
+                                                    <CopyButton text={ipInfo}></CopyButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -55,10 +59,10 @@ export default function MyIp({ myIpCheckResponseDto }: Props) {
                                         <h2 className="mb-4 text-m font-bold text-white py-2 pl-2">국가 정보</h2>
                                             <div className="break-all border border-plusGreen100 py-5 rounded-2xl bg-white relative">
                                                 <div className="text-black p-3 text-center" id="">
-                                                    {myIpCheckResponseDto.country}
+                                                    {countryCode + " / " + countryName}
                                                 </div>
                                                 <div className="absolute bottom-0 right-0 mr-2 mb-2">
-                                                    <CopyButton text={myIpCheckResponseDto.ip}></CopyButton>
+                                                    <CopyButton text={countryCode + " / " + countryName}></CopyButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,28 +79,3 @@ export default function MyIp({ myIpCheckResponseDto }: Props) {
         </MainDiv>
     )
 }
-
-
-
-export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
-    const url = `${process.env.API_BASE_URL}/util/etc/ip/my`;
-    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-
-    console.log(clientIp)
-
-    const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-    });
-
-    if (!response.ok) {
-        const errorMessage = `HTTP error! Status: ${response.status}`;
-        console.error(errorMessage);
-    }
-    const myIpCheckResponseDto: MyIpCheckResponseDto = await response.json();
-    return {
-        props: {
-            myIpCheckResponseDto,
-        },
-    };
-};

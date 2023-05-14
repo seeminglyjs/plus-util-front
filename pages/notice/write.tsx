@@ -16,25 +16,10 @@ import DefaultModal from "@/components/Modal/DefaultModal";
 import WriteButton from "@/components/Notice/WriteButton";
 import { useRouter } from "next/router";
 import { CookieAndAuth } from "@/interface/Auth/CookieAndAuth";
-
-
-interface NoticeWriteResponse {
-    writeOk: boolean
-}
-
-type CookieState = {
-    [key: string]: string;
-  };
+import { NoticeWriteResponse } from "@/interface/Notice/NoticeWriteResponse";
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     const { name, authorities, authenticated } = authData;
-    // const cookies: { [key: string]: string } = {};
-    // cookie.split(";").forEach((cookiePart:string) => {
-    //   const [key, value] = cookiePart.trim().split("=");
-    //   cookies[key] = value;
-    // });  
-    // const partialCookies: Partial<{ [key: string]: string }> = cookies;
-
 
     const router = useRouter()
     const currentNo = router.query.currentPage
@@ -163,7 +148,6 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
 
 export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
     const authData: AuthData = await fetchAuthData(req);
-    // const cookie = req.headers.cookie || "";
     return {
         props: {
             authData,

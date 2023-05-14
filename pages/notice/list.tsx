@@ -20,7 +20,6 @@ import { ParsedUrlQuery } from "querystring";
 import { BiPencil } from "react-icons/bi";
 
 
-
 export default function NoticeList({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
 

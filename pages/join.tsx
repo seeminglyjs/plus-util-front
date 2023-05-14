@@ -18,6 +18,8 @@ import { AuthData } from '../interface/Auth/AuthData';
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
 import { JoinResult } from '../interface/Join/JoinResult';
 import DefaultModal from '../components/Modal/DefaultModal';
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
+import { InputRegex } from "@/components/Regex/InputRegex";
 
 
 export default function Join({ authData }: Props) {
@@ -25,29 +27,19 @@ export default function Join({ authData }: Props) {
 
     const [email, setEmail] = useState("");
     const [vaildEmail, SetVaildEmail] = useState(false);
-    const validateEmail = (email: string) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
     function handleChangeEmail
         (event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setEmail(value);
-        SetVaildEmail(validateEmail(value));
+        SetVaildEmail(InputRegexFunction(value,InputRegex.LoginEmail));
     }
-
 
     const [password, setPassword] = useState("");
     const [vaildPassword, setVaildPassword] = useState(false);
-    function validatePassword(password: string) {
-        const regex = /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
-        // const regex = /^\d{8,}$/;
-        return regex.test(password);
-    }
     function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setPassword(value);
-        setVaildPassword(validatePassword(value));
+        setVaildPassword(InputRegexFunction(value,InputRegex.LoginPassword));
     }
 
     const [joinVaild, setJoinVaild] = useState(false);

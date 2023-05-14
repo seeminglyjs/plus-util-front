@@ -12,9 +12,10 @@ import { BiLockOpen } from "react-icons/bi";
 import { BiKey } from "react-icons/bi";
 import Accordion from '../../components/Etc/Accordion';
 import { RsaClassNames } from "@/components/ClassName/RsaClassName";
-import { RsaEncryptResponseDto } from "@/interface/Encrypt/RsaEncryptResponseDto";
-import { RsaKeyMakeResponseDto } from "@/interface/Encrypt/RsaKeyMakeResponseDto";
-import { RsaDecryptResponseDto } from "@/interface/Encrypt/RsaDecryptResponseDto";
+import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
+import { RsaKeyMakeResponseDto } from "@/interface/Encrypt/Rsa/RsaKeyMakeResponseDto";
+import { RsaEncryptResponseDto } from "@/interface/Encrypt/Rsa/RsaEncryptResponseDto";
+import { RsaDecryptResponseDto } from "@/interface/Encrypt/Rsa/RsaDecryptResponseDto";
 
 
 export default function Rsa() {
@@ -164,8 +165,8 @@ export default function Rsa() {
                                         <form action="#">
                                             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                                 <div>
-                                                    <label htmlFor="rsaWay" className="block mb-2 text-sm font-medium text-white">암/복호화</label>
-                                                    <select onChange={rsaWayChange} id="aesWay" name="aesWay" className={RsaClassNames.rsaWayChangeSelect}>
+                                                    <label htmlFor="rsaWay" className={DefaultClassNames.FormDefaultChangeLabel}>암/복호화</label>
+                                                    <select onChange={rsaWayChange} id="aesWay" name="aesWay" className={DefaultClassNames.FormDefaultChangeSelect}>
                                                         <option value="encrypt">암호화</option>
                                                         <option value="decrypt">복호화</option>
                                                     </select>
@@ -174,29 +175,29 @@ export default function Rsa() {
                                                     <button onClick={rsaKeyMake} type="button" className={RsaClassNames.reaKeyMakeButton}>키 생성 <BiKey className="inline"></BiKey></button>
                                                 </div>
                                                 <div className="sm:col-span-2 relative">
-                                                    <label htmlFor="rsaPublicKey" className="block mb-2 text-sm font-medium text-white">RSA PublicKey</label>
-                                                    <input onChange={rsaPublicKeyChange} type="text" name="rsaPublicKey" id="rsaPublicKey" className={RsaClassNames.rsaKeyChangeInput} placeholder="공개키 정보" value={rsaPublicKey} />
+                                                    <label htmlFor="rsaPublicKey" className={DefaultClassNames.FormDefaultChangeLabel}>RSA PublicKey</label>
+                                                    <input onChange={rsaPublicKeyChange} type="text" name="rsaPublicKey" id="rsaPublicKey" className={DefaultClassNames.FormDefaultChangeInput} placeholder="공개키 정보" value={rsaPublicKey} />
                                                     <div className="absolute bottom-0 right-0 mr-2 mb-2">
                                                         <CopyButton text={rsaPublicKey}></CopyButton>
                                                     </div>
                                                     <p className="text-xs mt-1 text-plusGreen100">{rsaPublicKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2 relative">
-                                                    <label htmlFor="rsaPrivateKey" className="block mb-2 text-sm font-medium text-white">RSA PrivateKey</label>
-                                                    <input onChange={rsaPrivateKeyChange} type="text" name="rsaPrivateKey" id="rsaPrivateKey" className={RsaClassNames.rsaKeyChangeInput} placeholder="비밀키 정보" value={rsaPrivateKey} />
+                                                    <label htmlFor="rsaPrivateKey" className={DefaultClassNames.FormDefaultChangeLabel}>RSA PrivateKey</label>
+                                                    <input onChange={rsaPrivateKeyChange} type="text" name="rsaPrivateKey" id="rsaPrivateKey" className={DefaultClassNames.FormDefaultChangeInput} placeholder="비밀키 정보" value={rsaPrivateKey} />
                                                     <div className="absolute bottom-0 right-0 mr-2 mb-2">
                                                         <CopyButton text={rsaPrivateKey}></CopyButton>
                                                     </div>
                                                     <p className="text-xs mt-1 text-plusGreen100">{rsaPrivateKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
-                                                    <label htmlFor="rsaContent" className="block mb-2 text-sm font-medium text-white">텍스트</label>
-                                                    <textarea rows={10} onChange={rsaContentChange} id="aesContent" name="aesContent" className={RsaClassNames.rsaContentTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
+                                                    <label htmlFor="rsaContent" className={DefaultClassNames.FormDefaultChangeLabel}>텍스트</label>
+                                                    <textarea rows={10} onChange={rsaContentChange} id="aesContent" name="aesContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
                                                     <p className="text-xs mt-1 text-plusGreen100">{rsaContent.length} 자  / 최대 5000자</p>
                                                 </div>
                                             </div>
                                             <div className="text-center">
-                                                <button onClick={rsaRequestSend} type="button" className={RsaClassNames.rsaRequestSendButton}>
+                                                <button onClick={rsaRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                     확인
                                                 </button>
                                             </div>

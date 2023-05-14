@@ -6,18 +6,8 @@ import MainSubDiv from '../components/Layout/MainSubDiv';
 import ContentColDiv from '../components/Layout/ContentColDiv';
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
-import NavBar from "@/components/Navbar/NavBar";
+import { Data } from "@/interface/Index/Data";
 
-interface GithubLanguages {
-  gvalue: string;
-  gkey: string;
-}
-
-interface Data {
-  code: string;
-  githubCodeSum: number;
-  githubLanguagesList: [GithubLanguages];
-};
 
 export default function HomePage({ datas }: any) {
   const data: Data = datas;
@@ -55,7 +45,7 @@ export default function HomePage({ datas }: any) {
               </p>
               <div className="pt-3">
                 {dataCheck && (data.githubLanguagesList.map((codeMap) => (
-                  <div key={codeMap.gkey}>
+                  <div className="mt-3" key={codeMap.gkey}>
                     <div className="flex justify-between mb-1">
                       <span className="text-base font-medium dark:text-white">{codeMap.gkey}</span>
                       <span className="text-sm font-medium dark:text-white">{codeMap.gvalue}%</span>
@@ -80,7 +70,6 @@ export default function HomePage({ datas }: any) {
     </div>
   );
 }
-
 
 export async function getStaticProps() {
   const res = await api.get('/home')

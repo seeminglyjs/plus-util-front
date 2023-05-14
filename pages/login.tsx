@@ -18,6 +18,8 @@ import { AuthData } from '../interface/Auth/AuthData';
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
 import Footer from '../components/Footer/Footer';
 import DefaultModal from "@/components/Modal/DefaultModal";
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
+import { InputRegex } from "@/components/Regex/InputRegex";
 
 
 export default function Login({ authData }: Props) {
@@ -25,44 +27,19 @@ export default function Login({ authData }: Props) {
 
     const [email, setEmail] = useState("");
     const [vaildEmail, SetVaildEmail] = useState(false);
-    const validateEmail = (email: string) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
     function handleChangeEmail
         (event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setEmail(value);
-        SetVaildEmail(validateEmail(value));
+        SetVaildEmail(InputRegexFunction(value, InputRegex.LoginEmail));
     }
 
     const [password, setPassword] = useState("");
     const [vaildPassword, setVaildPassword] = useState(false);
-    function validatePassword(password: string) {
-        const regex = /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
-        // const regex = /^\d{8,}$/;
-        return regex.test(password);
-    }
     function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setPassword(value);
-        setVaildPassword(validatePassword(value));
-    }
-
-    let [isOpen, setIsOpen] = useState(false)
-    let [modalTitle, setModalTitle] = useState("확인요청")
-    let [modalContent, setModalContent] = useState("정보를 확인해주세요.")
-    let [modalButtonContetnt, setModalButtonContetnt] = useState("확인")
-
-    function closeModal() {
-        setIsOpen(false)
-    }
-
-    function openModal(title: string, content: string, buttonContent: string) {
-        setModalTitle(current => title)
-        setModalContent(current => content)
-        setModalButtonContetnt(current => buttonContent)
-        setIsOpen(true)
+        setVaildPassword(InputRegexFunction(value, InputRegex.LoginPassword));
     }
 
     const router = useRouter()
@@ -125,13 +102,6 @@ export default function Login({ authData }: Props) {
                                     <Loading></Loading>
                                 )
                                 }
-                                <DefaultModal
-                                    isOpen={isOpen}
-                                    closeModal={closeModal}
-                                    title={modalTitle}
-                                    content={modalContent}
-                                    buttonContent={modalButtonContetnt}
-                                />
                             </HalfDiv>
                             <HalfAndHalfDiv>
                             </HalfAndHalfDiv>

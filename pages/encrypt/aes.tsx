@@ -10,23 +10,11 @@ import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import { useState } from "react";
 import { BiLockOpen } from "react-icons/bi";
 import Accordion from '../../components/Etc/Accordion';
-
-interface AesEncryptResponseDto {
-    aesKey: string,
-    aesIv: string,
-    aesContent: string,
-    type: string,
-    encryptContent: string
-}
-
-interface AesDecryptResponseDto {
-    aesKey: string,
-    aesIv: string,
-    aesContent: string,
-    type: string,
-    decryptContent: string
-}
-
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
+import { InputRegex } from "@/components/Regex/InputRegex";
+import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
+import { AesEncryptResponseDto } from '@/interface/Encrypt/Aes/AesEncryptResponseDto';
+import { AesDecryptResponseDto } from "@/interface/Encrypt/Aes/AesDecryptResponseDto";
 
 export default function Aes() {
     const [aesWay, setAesWay] = useState("encrypt");
@@ -62,21 +50,13 @@ export default function Aes() {
         setAesContent(value);
     }
 
-    function isValidAesIv(aesIv: string) {
-        return /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{16}$/.test(aesIv);
-    }
-
-    function isValidAesKey(aesKey: string) {
-        return /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{32}$/.test(aesKey);
-    }
-
     function isValidAesContent(aesContent: string) {
         return aesContent.length <= 5000;
     }
 
     const aesRequestCheck = () => {
-        if (isValidAesKey(aesKey)) {
-            if (isValidAesIv(aesIv)) {
+        if (InputRegexFunction(aesKey,InputRegex.AesKey)) {
+            if (InputRegexFunction(aesIv,InputRegex.AesIv)) {
                 if (isValidAesContent(aesContent)) return true;
                 else false;
             } else return false;
@@ -154,38 +134,38 @@ export default function Aes() {
                                         <form action="#">
                                             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                                 <div>
-                                                    <label htmlFor="aesWay" className="block mb-2 text-sm font-medium text-white">암/복호화</label>
-                                                    <select onChange={aesWayChange} id="aesWay" name="aesWay" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                                    <label htmlFor="aesWay" className={DefaultClassNames.FormDefaultChangeLabel}>암/복호화</label>
+                                                    <select onChange={aesWayChange} id="aesWay" name="aesWay" className={DefaultClassNames.FormDefaultChangeSelect}>
                                                         <option value="encrypt">암호화</option>
                                                         <option value="decrypt">복호화</option>
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label htmlFor="aesType" className="block mb-2 text-sm font-medium text-white">Type Bit</label>
-                                                    <select onChange={aesTypeChange} id="aesType" name="aesType" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                                    <label htmlFor="aesType" className={DefaultClassNames.FormDefaultChangeLabel}>Type Bit</label>
+                                                    <select onChange={aesTypeChange} id="aesType" name="aesType" className={DefaultClassNames.FormDefaultChangeSelect}>
                                                         <option value="256">256 Bit</option>
                                                         <option disabled value="192">192 Bit</option>
                                                         <option disabled value="128">128 Bit</option>
                                                     </select>
                                                 </div>
                                                 <div className="sm:col-span-2">
-                                                    <label htmlFor="aesKey" className="block mb-2 text-sm font-medium text-white">Aes Key</label>
-                                                    <input onChange={aesKeyChange} type="text" name="aesKey" id="aesKey" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="32Byte" value={aesKey} />
+                                                    <label htmlFor="aesKey" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Key</label>
+                                                    <input onChange={aesKeyChange} type="text" name="aesKey" id="aesKey" className={DefaultClassNames.FormDefaultChangeInput} placeholder="32Byte" value={aesKey} />
                                                     <p className="text-xs mt-1 text-plusGreen100">{aesKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
-                                                    <label htmlFor="aesIv" className="block mb-2 text-sm font-medium text-white">Aes Iv</label>
-                                                    <input onChange={aesIvChange} type="text" name="aesIv" id="aesIv" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="16Byte" value={aesIv} />
+                                                    <label htmlFor="aesIv" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Iv</label>
+                                                    <input onChange={aesIvChange} type="text" name="aesIv" id="aesIv" className={DefaultClassNames.FormDefaultChangeInput} placeholder="16Byte" value={aesIv} />
                                                     <p className="text-xs mt-1 text-plusGreen100">{aesIv.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
-                                                    <label htmlFor="aesContent" className="block mb-2 text-sm font-medium text-white">텍스트</label>
-                                                    <textarea rows={10} onChange={aesContentChange} id="aesContent" name="aesContent" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500" placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
+                                                    <label htmlFor="aesContent" className={DefaultClassNames.FormDefaultChangeLabel}>텍스트</label>
+                                                    <textarea rows={10} onChange={aesContentChange} id="aesContent" name="aesContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
                                                     <p className="text-xs mt-1 text-plusGreen100">{aesContent.length} 자  / 최대 5000자</p>
                                                 </div>
                                             </div>
                                             <div className="text-center">
-                                                <button onClick={aesRequestSend} type="button" className=" bg-plusGreen100 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
+                                                <button onClick={aesRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                     확인
                                                 </button>
                                             </div>

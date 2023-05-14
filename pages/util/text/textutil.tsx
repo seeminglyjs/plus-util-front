@@ -11,17 +11,9 @@ import { useState } from 'react';
 import { BiPointer, BiText } from "react-icons/bi";
 import { MouseEvent } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
+import { StringInitialResponseDto } from "@/interface/Util/Text/StringInitialResponseDto";
+import { StringConvertCaseResponseDto } from "@/interface/Util/Text/StringConvertCaseResponseDto";
 
-interface StringInitialResponseDto {
-    stringContent : string,
-    initialString : string
-}
-
-interface StringConvertCaseResponseDto {
-    stringContent : string,
-    upperOrLower : string,
-    convertStringContent : string
-}
 
 export default function TextUtil() {
     const [textContent, setTextContet] = useState("");

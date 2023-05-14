@@ -11,13 +11,8 @@ import { useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { InputRegex } from "@/components/Regex/InputRegex";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
-import { BiBong, BiText } from "react-icons/bi";
-
-interface SlidingWindowResponseDto {
-    slidingWindowArr: string,
-    slidingWindowRange: string,
-    slidingWindowResult: bigint
-}
+import { BiBong} from "react-icons/bi";
+import { SlidingWindowResponseDto } from "@/interface/Algorithm/Basic/SlidingWindowResponseDto";
 
 
 export default function SlidingWindow() {

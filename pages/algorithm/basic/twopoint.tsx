@@ -11,14 +11,8 @@ import { useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { InputRegex } from "@/components/Regex/InputRegex";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
-import { BiBong, BiText } from "react-icons/bi";
-
-interface TwoPointerResponseDto {
-    twoPointerArr: string,
-    twoPointerTarget: string,
-    twoPointerResult: bigint
-}
-
+import { BiBong} from "react-icons/bi";
+import { TwoPointerResponseDto } from "@/interface/Algorithm/Basic/TwoPointerResponseDto";
 
 export default function TwoPointer() {
     const [twoPointerArr, setTwoPointerArr] = useState("");
