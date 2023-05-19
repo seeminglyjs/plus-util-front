@@ -56,7 +56,7 @@ export const links = [
             {
                 Head: "그래프이론",
                 sublink: [
-                    { name: "BFS", link: "/" },
+                    { name: "BFS", link: "/algorithm/graph/bfs" },
                     { name: "DFS", link: "/" },
                 ]
             },
