@@ -10,45 +10,45 @@ import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import { useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { BiBong } from "react-icons/bi";
-import { BfsResponseDto } from "@/interface/Algorithm/Grapth/BfsResponseDto";
+import { DfsResponseDto } from "@/interface/Algorithm/Grapth/DfsResponseDto";
 
 
 export default function SlidingWindow() {
-    const [bfsRow, setBfsRow] = useState("");
-    const [bfsCol, setBfsCol] = useState("");
-    const [bfsStartRow, setBfsStartRow] = useState("");
-    const [bfsStartCol, setBfsStartCol] = useState("");
-    const [bfsEndRow, setBfsEndRow] = useState("");
-    const [bfsEndCol, setBfsEndCol] = useState("");
+    const [dfsRow, setDfsRow] = useState("");
+    const [dfsCol, setDfsCol] = useState("");
+    const [dfsStartRow, setDfsStartRow] = useState("");
+    const [dfsStartCol, setDfsStartCol] = useState("");
+    const [dfsEndRow, setDfsEndRow] = useState("");
+    const [dfsEndCol, setDfsEndCol] = useState("");
 
     const [resultData, setResultData] = useState("");
 
-    function textChangeBfs(event: React.ChangeEvent<HTMLInputElement>) {
+    function textChangedfs(event: React.ChangeEvent<HTMLInputElement>) {
         let target = event.target
         let id = target.id
         let value = target.value;
         if(parseInt(value,10) > 15) value = "15"
         if(parseInt(value,10) < 1) value = "1"
-        if(id === "bfsRow") setBfsRow(value)
-        if(id === "bfsCol") setBfsCol(value)
-        if(id === "bfsStartRow") setBfsStartRow(value)
-        if(id === "bfsStartCol") setBfsStartCol(value)
-        if(id === "bfsEndRow") setBfsEndRow(value)
-        if(id === "bfsEndCol") setBfsEndCol(value)
+        if(id === "dfsRow") setDfsRow(value)
+        if(id === "dfsCol") setDfsCol(value)
+        if(id === "dfsStartRow") setDfsStartRow(value)
+        if(id === "dfsStartCol") setDfsStartCol(value)
+        if(id === "dfsEndRow") setDfsEndRow(value)
+        if(id === "dfsEndCol") setDfsEndCol(value)
     }
 
-    const bfsRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/bfs/distance`
-        if(bfsRow === "" || bfsCol === "" || bfsStartRow === "" || bfsStartCol === "" || bfsEndRow === "" || bfsEndCol === "") return
-        if(bfsRow < bfsStartRow|| bfsCol < bfsStartCol || bfsEndRow < bfsStartRow || bfsEndCol < bfsStartCol) return
+    const dfsRequestSend = async () => {
+        const url = `${process.env.API_BASE_URL}/algorithm/dfs/distance`
+        if(dfsRow === "" || dfsCol === "" || dfsStartRow === "" || dfsStartCol === "" || dfsEndRow === "" || dfsEndCol === "") return
+        if(dfsRow < dfsStartRow|| dfsCol < dfsStartCol || dfsEndRow < dfsStartRow || dfsEndCol < dfsStartCol) return
         
         const data = {
-            bfsRow: bfsRow,
-            bfsCol: bfsCol,
-            bfsStartRow: bfsStartRow,
-            bfsStartCol: bfsStartCol,
-            bfsEndRow: bfsEndRow,
-            bfsEndCol: bfsEndCol
+            dfsRow: dfsRow,
+            dfsCol: dfsCol,
+            dfsStartRow: dfsStartRow,
+            dfsStartCol: dfsStartCol,
+            dfsEndRow: dfsEndRow,
+            dfsEndCol: dfsEndCol
         }
 
         if (data === null) return
@@ -66,8 +66,8 @@ export default function SlidingWindow() {
             console.error(errorMessage);
             return;
         } else {
-            const BfsResponseDto: BfsResponseDto = await response.json()
-            setResultData(BfsResponseDto.bfsSearchResult.toString());
+            const dfsResponseDto: DfsResponseDto = await response.json()
+            setResultData(dfsResponseDto.dfsSearchResult.toString());
         }
     }
 
@@ -84,36 +84,36 @@ export default function SlidingWindow() {
                                 <div className={DefaultClassNames.FormDefaultParentDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">BFS 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
+                                            <span className="text-xl font-bold text-white text-center mr-1">DFS 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
                                         </div>
                                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                             <div>
-                                                <label htmlFor="bfsRow" className={DefaultClassNames.FormDefaultChangeLabel}>행</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsRow" id="bfsRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={bfsRow} />
+                                                <label htmlFor="dfsRow" className={DefaultClassNames.FormDefaultChangeLabel}>행</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsRow" id="dfsRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={dfsRow} />
                                             </div>
                                             <div >
-                                                <label htmlFor="bfsCol" className={DefaultClassNames.FormDefaultChangeLabel}>열</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsCol" id="bfsCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={bfsCol} />
+                                                <label htmlFor="dfsCol" className={DefaultClassNames.FormDefaultChangeLabel}>열</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsCol" id="dfsCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={dfsCol} />
                                             </div>
                                             <div>
-                                                <label htmlFor="bfsStartRow" className={DefaultClassNames.FormDefaultChangeLabel}>시작 행</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsStartRow" id="bfsStartRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={bfsStartRow} />
+                                                <label htmlFor="dfsStartRow" className={DefaultClassNames.FormDefaultChangeLabel}>시작 행</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsStartRow" id="dfsStartRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={dfsStartRow} />
                                             </div>
                                             <div >
-                                                <label htmlFor="bfsStartCol" className={DefaultClassNames.FormDefaultChangeLabel}>시작 열</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsStartCol" id="bfsStartCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={bfsStartCol} />
+                                                <label htmlFor="dfsStartCol" className={DefaultClassNames.FormDefaultChangeLabel}>시작 열</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsStartCol" id="dfsStartCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={dfsStartCol} />
                                             </div>
                                             <div>
-                                                <label htmlFor="bfsEndRow" className={DefaultClassNames.FormDefaultChangeLabel}>도착 행</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsEndRow" id="bfsEndRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={bfsEndRow} />
+                                                <label htmlFor="dfsEndRow" className={DefaultClassNames.FormDefaultChangeLabel}>도착 행</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsEndRow" id="dfsEndRow" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요. 15이하" value={dfsEndRow} />
                                             </div>
                                             <div >
-                                                <label htmlFor="bfsEndCol" className={DefaultClassNames.FormDefaultChangeLabel}>도착 열</label>
-                                                <input onChange={textChangeBfs} type="number" name="bfsEndCol" id="bfsEndCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요." value={bfsEndCol} />
+                                                <label htmlFor="dfsEndCol" className={DefaultClassNames.FormDefaultChangeLabel}>도착 열</label>
+                                                <input onChange={textChangedfs} type="number" name="dfsEndCol" id="dfsEndCol" className={DefaultClassNames.FormDefaultChangeInput} placeholder="값을 입력해 주세요." value={dfsEndCol} />
                                             </div>
                                         </div>
                                         <div className="text-center">
-                                            <button onClick={bfsRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                            <button onClick={dfsRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                 확인
                                             </button>
                                         </div>

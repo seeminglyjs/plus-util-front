@@ -16,7 +16,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
 
   return (
     <div className="text-gray-500 py-2 px-1 m-2">
-      <button className="flex items-center justify-between w-full py-5 font-medium text-left text-plus200 border-b border-plusGreen150" type="button" onClick={handleToggle}>
+      <button className="flex items-center justify-between w-full py-5 font-medium text-left text-white border-b border-gray-700" type="button" onClick={handleToggle}>
        {title} {!isOpen && <BiChevronDown className="inline"></BiChevronDown>} {isOpen && <BiChevronUp className="inline"></BiChevronUp>}
       </button>
       {isOpen && 

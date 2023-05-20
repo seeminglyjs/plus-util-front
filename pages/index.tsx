@@ -30,18 +30,24 @@ export default function HomePage({ datas }: any) {
 
             <ContentRowDiv>
               <HalfDiv>
-                <p className="text-2xl font-bold text-plus200">
-                  About
-                </p>
-                <div className="pt-3">
-                  <p>
-                    자주 사용하는 유틸 정보들을 한곳에 모아 편하게 사용하고자 해당 서비스를 기획하게 되었으며, 필요에 따라 기능을 추가하고 있습니다.
-                  </p>
+                <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 md:p-12 mb-8">
+                  <a href="#" className="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-blue-400 mb-2">
+                    Rank
+                  </a>
+                  <h1 className="text-white text-3xl md:text-5xl font-extrabold mb-2">Top Util</h1>
+                  <p className="text-lg font-normal text-gray-400 mb-2 hover:underline hover:cursor-pointer">1. 텍스트 도구 : 문자열에 다양한 방법으로 변환시킬 수 있습니다. </p>
+                  <p className="text-lg font-normal text-gray-400 mb-2">2. Static websites are now used to bootstrap lots of websites and are </p>
+                  <p className="text-lg font-normal text-gray-400 mb-2">3. Static websites are now used to bootstrap lots of websites and are </p>
+                  <p className="text-lg font-normal text-gray-400 mb-2">4. Static websites are now used to bootstrap lots of websites and are </p>
+                  <p className="text-lg font-normal text-gray-400 mb-2">5. Static websites are now used to bootstrap lots of websites and are </p>
+                  <a href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-900">
+                    Read more
+                  </a>
                 </div>
               </HalfDiv>
 
               <HalfDiv>
-                <p className="text-2xl font-bold text-plus200">
+                <p className="text-2xl font-bold text-white">
                   Source Code List
                 </p>
                 <div className="pt-3">

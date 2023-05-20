@@ -126,7 +126,7 @@ export default function Aes() {
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
-                                <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
+                                <div className="border border-gray-700 rounded-3xl py-8 px-4">
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
                                             <span className="text-xl font-bold text-white text-center mr-1"> Aes 암호화</span><BiLockOpen className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiLockOpen>
@@ -151,17 +151,17 @@ export default function Aes() {
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesKey" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Key</label>
                                                     <input onChange={aesKeyChange} type="text" name="aesKey" id="aesKey" className={DefaultClassNames.FormDefaultChangeInput} placeholder="32Byte" value={aesKey} />
-                                                    <p className="text-xs mt-1 text-plusGreen100">{aesKey.length} Byte </p>
+                                                    <p className="text-xs mt-1 text-white">{aesKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesIv" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Iv</label>
                                                     <input onChange={aesIvChange} type="text" name="aesIv" id="aesIv" className={DefaultClassNames.FormDefaultChangeInput} placeholder="16Byte" value={aesIv} />
-                                                    <p className="text-xs mt-1 text-plusGreen100">{aesIv.length} Byte </p>
+                                                    <p className="text-xs mt-1 text-white">{aesIv.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesContent" className={DefaultClassNames.FormDefaultChangeLabel}>텍스트</label>
                                                     <textarea rows={10} onChange={aesContentChange} id="aesContent" name="aesContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
-                                                    <p className="text-xs mt-1 text-plusGreen100">{aesContent.length} 자  / 최대 5000자</p>
+                                                    <p className="text-xs mt-1 text-white">{aesContent.length} 자  / 최대 5000자</p>
                                                 </div>
                                             </div>
                                             <div className="text-center">

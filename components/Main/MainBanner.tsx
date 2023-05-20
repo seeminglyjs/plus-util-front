@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import mainBackgroundImage from '../../public/main/pramod-tiwari-BpmtsO4JTEw-unsplash.jpg';
 import MainDiv from "../Layout/MainDiv";
+import Link from "next/link";
 
 export default function MainBanner() {
   const mainBannerStyle: React.CSSProperties = {
@@ -38,7 +39,9 @@ export default function MainBanner() {
 
           </p>
           <button className="mt-4 bg-plus300 hover:bg-plusOrange font-semibold py-2 px-4 rounded-full shadow btn-sm">
+            <Link href="/notice/list">
             Go Plus
+            </Link>
           </button>
         </div>
         <a

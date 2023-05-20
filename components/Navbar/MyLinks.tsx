@@ -48,7 +48,7 @@ export const links = [
         { name: '알고리즘', submenu: true, sublink: [
             {
                 Head: "Basic",
-                sublink: [
+                sublink: [ 
                     { name: "투 포인트 알고리즘", link: "/algorithm/basic/twopoint" },
                     { name: "슬라이딩 윈도우", link: "/algorithm/basic/slidingwindow" },
                 ]
@@ -57,7 +57,7 @@ export const links = [
                 Head: "그래프이론",
                 sublink: [
                     { name: "BFS", link: "/algorithm/graph/bfs" },
-                    { name: "DFS", link: "/" },
+                    { name: "DFS", link: "/algorithm/graph/dfs" },
                 ]
             },
         ]

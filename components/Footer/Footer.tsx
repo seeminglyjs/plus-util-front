@@ -27,10 +27,14 @@ export default function Footer() {
                     <ul>
                         <p className="font-bold text-2xl pb-4">Board</p>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            공지사항
+                            <Link href="/notice/list">
+                                공지사항
+                            </Link>
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            업데이트
+                            <Link href="/">
+                                홈페이지
+                            </Link>
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
                             기타
@@ -41,33 +45,34 @@ export default function Footer() {
                     <ul>
                         <p className="font-bold text-2xl pb-4">추천유틸</p>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            글자수 체크
+                            <Link href="/util/text/textutil">
+                                텍스트 도구
+                            </Link>
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            초성 추출
+                            <Link href="/util/text/textsimilarity">
+                                문자열 유사성
+                            </Link>
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            요일 구하기
-                        </li>
-                        <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            투 포인트 알고리즘
+                            <Link href="/util/time/dayoftheweek">
+                                요일 구하기
+                            </Link>
                         </li>
                     </ul>
                 </div>
                 <div className="p-5">
                     <ul>
-                        <p className="font-bold text-2xl pb-5">Test4</p>
+                        <p className="font-bold text-2xl pb-5">암호화</p>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test4-sub1
+                            <Link href="/encrypt/aes">
+                                AES 암호화
+                            </Link>
                         </li>
                         <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test4-sub2
-                        </li>
-                        <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test4-sub3
-                        </li>
-                        <li className="text-md pb-2 font-semibold hover:text-plusOrange cursor-pointer">
-                            test4-sub4
+                            <Link href="/encrypt/rsa">
+                                RSA 암호화
+                            </Link>
                         </li>
                     </ul>
                 </div>

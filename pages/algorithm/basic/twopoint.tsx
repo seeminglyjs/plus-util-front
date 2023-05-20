@@ -74,7 +74,7 @@ export default function TwoPointer() {
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
-                                <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
+                                <div className={DefaultClassNames.FormDefaultParentDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
                                             <span className="text-xl font-bold text-white text-center mr-1">투 포인트 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
