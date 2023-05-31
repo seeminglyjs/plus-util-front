@@ -17,7 +17,6 @@ import { Props } from '../interface/Auth/Props';
 import { AuthData } from '../interface/Auth/AuthData';
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
 import Footer from '../components/Footer/Footer';
-import DefaultModal from "@/components/Modal/DefaultModal";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { InputRegex } from "@/components/Regex/InputRegex";
 
