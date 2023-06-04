@@ -6,10 +6,10 @@ import Button from './Button';
 
 
 interface Authenticated {
-    authenticated : boolean
+    authenticated: boolean
 }
 
-export default function NavBar({authenticated} : Authenticated) {
+export default function NavBar({ authenticated }: Authenticated) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -17,9 +17,9 @@ export default function NavBar({authenticated} : Authenticated) {
             <div className='flex items-center font-medium justify-around'>
                 <div className="z-50 p-5 md:w-auto w-full flex justify-between md:">
                     <Link href="/">
-                    <p className="text-plusOrange font-bold text-3xl cursor-pointer">
-                        Plus<span className="text-plus200">Util</span>
-                    </p>
+                        <p className="text-plusOrange font-bold text-3xl cursor-pointer">
+                            Plus<span className="text-plus200">Util</span>
+                        </p>
                     </Link>
                     <div className="text-3xl md:hidden" onClick={() => setOpen(!open)}>
                         <span className="cursor-pointer"><BiMenu /></span>
@@ -33,13 +33,20 @@ export default function NavBar({authenticated} : Authenticated) {
                 </ul>
                 <div className="md:block hidden">
                     {!authenticated && (
-                    <span>
-                    <Link href="/login/"><Button buttonName="login"/></Link>
-                    <span className="px-2"></span>
-                    <Link href="/join/"><Button buttonName="join"/></Link>
-                    </span>
+                        <span>
+                            <Link href="/login/"><Button buttonName="login" /></Link>
+                            <span className="px-2"></span>
+                            <Link href="/join/"><Button buttonName="join" /></Link>
+                        </span>
                     )}
-                    {authenticated && (<Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout"/></Link>)}
+                    {authenticated && (
+                        <span>
+                            <Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout" /></Link>
+                            <span className="px-2"></span>
+                            <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                        </span>
+                    )
+                    }
                 </div>
                 {/*Mobile nav*/}
                 <ul className={
@@ -51,14 +58,21 @@ export default function NavBar({authenticated} : Authenticated) {
                     </li>
                     <NavBarLinks />
                     <div className="py-5">
-                    {!authenticated && (
-                    <span>
-                    <Link href="/login/"><Button buttonName="login"/></Link>
-                    <span className="px-2"></span>
-                    <Link href="/join/"><Button buttonName="join"/></Link>
-                    </span>
-                    )}
-                    {authenticated && (<Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout"/></Link>)}
+                        {!authenticated && (
+                            <span>
+                                <Link href="/login/"><Button buttonName="login" /></Link>
+                                <span className="px-2"></span>
+                                <Link href="/join/"><Button buttonName="join" /></Link>
+                            </span>
+                        )}
+                        {authenticated && (
+                            <span>
+                                <Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout" /></Link>
+                                <span className="px-2"></span>
+                                <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                            </span>
+                        )
+                        }
                     </div>
                 </ul>
             </div>
