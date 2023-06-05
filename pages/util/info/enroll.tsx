@@ -15,16 +15,16 @@ import HalfDiv from "@/components/Layout/HalfDiv";
 import HalfAndHalfDiv from "@/components/Layout/HalfAndHalfDiv";
 
 interface UtilInfoInsertResponseDto {
-    auth : boolean,
-    utilName : string,
-    utilDescription : string,
-    utilViews : bigint,
-    utilLikes : bigint,
-    urlPath : string,
-    category : string
+    auth: boolean,
+    utilName: string,
+    utilDescription: string,
+    utilViews: bigint,
+    utilLikes: bigint,
+    urlPath: string,
+    category: string
 }
 
-export default function NoticeList({ authData }: Props) {
+export default function UtilEnroll({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
     const [urlPath, setUrlPath] = useState("");
     const [category, setCategory] = useState("basic");
@@ -58,8 +58,8 @@ export default function NoticeList({ authData }: Props) {
             utilDescription: utilDescription,
             urlPath: urlPath,
             category: category,
-            utilViews : 0,
-            utilLikes : 0
+            utilViews: 0,
+            utilLikes: 0
         };
 
         const response = await fetch(url, {
@@ -76,8 +76,8 @@ export default function NoticeList({ authData }: Props) {
             console.error(errorMessage);
             return;
         } else {
-           const utilInfoInsertResponseDto : UtilInfoInsertResponseDto =  await response.json();
-           console.log(utilInfoInsertResponseDto);
+            const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = await response.json();
+            console.log(utilInfoInsertResponseDto);
         }
     }
 
@@ -128,6 +128,12 @@ export default function NoticeList({ authData }: Props) {
                                                         </button>
                                                     )
                                                 }
+                                                <span className="mx-2"></span>
+                                                <Link href={"/admin/main"}>
+                                                    <button type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                                        관리자메인
+                                                    </button>
+                                                </Link>
                                             </div>
                                         </form>
                                     </div>
