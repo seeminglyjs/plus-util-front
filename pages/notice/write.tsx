@@ -11,15 +11,17 @@ import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import BackButton from "@/components/Etc/Button/BackButton";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DefaultModal from "@/components/Modal/DefaultModal";
 import WriteButton from "@/components/Notice/WriteButton";
 import { useRouter } from "next/router";
 import { CookieAndAuth } from "@/interface/Auth/CookieAndAuth";
 import { NoticeWriteResponse } from "@/interface/Notice/NoticeWriteResponse";
+import Loading from "@/components/Etc/Loading";
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     const { name, authorities, authenticated } = authData;
+
 
     const router = useRouter()
     const currentNo = router.query.currentPage
@@ -52,7 +54,7 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                 noticeTitle: title,
                 noticeContent: content,
                 category: category,
-                currentNo:currentNo
+                currentNo: currentNo
             };
 
             const response = await fetch(url, {
@@ -72,7 +74,7 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                 const noticeWriteResponse: NoticeWriteResponse = await response.json()
                 if (!noticeWriteResponse.writeOk) {
                     setIsOpen(true);
-                }else{
+                } else {
                     router.push('/notice/list');
                 }
             }
@@ -96,52 +98,68 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
         setIsOpen(true)
     }
 
+    useEffect(() => {
+        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+            router.push('/') // Redirect to dashboard if authenticated
+        }
+    }, [authData, authenticated, router])
+
+
     return (
         <MainDiv>
-            <MainSubDiv>
-                <ContentColDiv>
-                    <ContentRowDiv>
-                        <MajoritySubDiv>
-                        </MajoritySubDiv>
-                        <MajorityDiv>
-                            <div className="py-15">
-                                <div>
-                                    <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." />
-                                </div>
-                                <div className="my-3">
-                                    <span>
-                                        <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded">
-                                            <option value="notice">공지사항</option>
-                                            <option value="updateNote">업데이트</option>
-                                            <option value="etc">기타</option>
-                                        </select>
-                                    </span>
-                                </div>
-                                <div className="my-5">
-                                    <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요."></textarea>
-                                </div>
-                                <div>
-                                    {
-                                        authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
-                                            <WriteButton fetchNoticeInfo={writeNotice} buttonContent="작성"></WriteButton>
-                                        )
-                                    }
-                                    <BackButton></BackButton>
-                                </div>
-                            </div>
-                        </MajorityDiv>
-                        <MajoritySubDiv>
-                        </MajoritySubDiv>
-                        <DefaultModal
-                            isOpen={isOpen}
-                            closeModal={closeModal}
-                            title={modalTitle}
-                            content={modalContent}
-                            buttonContent={modalButtonContetnt}
-                        />
-                    </ContentRowDiv>
-                </ContentColDiv>
-            </MainSubDiv>
+            {
+                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                    <Loading></Loading>
+                )
+            }
+            {
+                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                    <MainSubDiv>
+                        <ContentColDiv>
+                            <ContentRowDiv>
+                                <MajoritySubDiv>
+                                </MajoritySubDiv>
+                                <MajorityDiv>
+                                    <div className="py-15">
+                                        <div>
+                                            <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." />
+                                        </div>
+                                        <div className="my-3">
+                                            <span>
+                                                <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded">
+                                                    <option value="notice">공지사항</option>
+                                                    <option value="updateNote">업데이트</option>
+                                                    <option value="etc">기타</option>
+                                                </select>
+                                            </span>
+                                        </div>
+                                        <div className="my-5">
+                                            <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요."></textarea>
+                                        </div>
+                                        <div>
+                                            {
+                                                authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                    <WriteButton fetchNoticeInfo={writeNotice} buttonContent="작성"></WriteButton>
+                                                )
+                                            }
+                                            <BackButton></BackButton>
+                                        </div>
+                                    </div>
+                                </MajorityDiv>
+                                <MajoritySubDiv>
+                                </MajoritySubDiv>
+                                <DefaultModal
+                                    isOpen={isOpen}
+                                    closeModal={closeModal}
+                                    title={modalTitle}
+                                    content={modalContent}
+                                    buttonContent={modalButtonContetnt}
+                                />
+                            </ContentRowDiv>
+                        </ContentColDiv>
+                    </MainSubDiv>
+                )
+            }
         </MainDiv>
     )
 }

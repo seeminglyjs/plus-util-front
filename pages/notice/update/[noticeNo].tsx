@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { CookieAndAuth } from "@/interface/Auth/CookieAndAuth";
 import { NoticeDetailDto } from "@/interface/Notice/NoticeDetailDto";
 import { NoticeUpdateResponse } from "@/interface/Notice/NoticeUpdateResponse";
+import Loading from "@/components/Etc/Loading";
 
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
@@ -139,50 +140,59 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
 
     return (
         <MainDiv>
-            <MainSubDiv>
-                <ContentColDiv>
-                    <ContentRowDiv>
-                        <MajoritySubDiv>
-                        </MajoritySubDiv>
-                        <MajorityDiv>
-                            <div className="py-15">
-                                <div>
-                                    <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." defaultValue={title}/>
+            {
+                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                    <Loading></Loading>
+                )
+            }
+            {
+                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                    <MainSubDiv>
+                    <ContentColDiv>
+                        <ContentRowDiv>
+                            <MajoritySubDiv>
+                            </MajoritySubDiv>
+                            <MajorityDiv>
+                                <div className="py-15">
+                                    <div>
+                                        <input onChange={getTitle} type="text" id="small-input" className="block w-full p-2 text-white bg-plus300 rounded" placeholder="제목을 입력해주세요." defaultValue={title}/>
+                                    </div>
+                                    <div className="my-3">
+                                        <span>
+                                            <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded" defaultValue={category}>
+                                                <option value="notice">공지사항</option>
+                                                <option value="updateNote">업데이트</option>
+                                                <option value="etc">기타</option>
+                                            </select>
+                                        </span>
+                                    </div>
+                                    <div className="my-5">
+                                        <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요." defaultValue={content}></textarea>
+                                    </div>
+                                    <div>
+                                        {
+                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                <WriteButton fetchNoticeInfo={updateNotice} buttonContent="수정"></WriteButton>
+                                            )
+                                        }
+                                        <BackButton></BackButton>
+                                    </div>
                                 </div>
-                                <div className="my-3">
-                                    <span>
-                                        <select onChange={getCategory} id="countries" className="bg-plus300 text-white text-sm block p-1 rounded" defaultValue={category}>
-                                            <option value="notice">공지사항</option>
-                                            <option value="updateNote">업데이트</option>
-                                            <option value="etc">기타</option>
-                                        </select>
-                                    </span>
-                                </div>
-                                <div className="my-5">
-                                    <textarea onChange={getContent} id="message" rows={30} className="block p-2.5 w-full text-sm text-white bg-plus300 rounded" placeholder="내용을 입력해주세요." defaultValue={content}></textarea>
-                                </div>
-                                <div>
-                                    {
-                                        authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
-                                            <WriteButton fetchNoticeInfo={updateNotice} buttonContent="수정"></WriteButton>
-                                        )
-                                    }
-                                    <BackButton></BackButton>
-                                </div>
-                            </div>
-                        </MajorityDiv>
-                        <MajoritySubDiv>
-                        </MajoritySubDiv>
-                        <DefaultModal
-                            isOpen={isOpen}
-                            closeModal={closeModal}
-                            title={modalTitle}
-                            content={modalContent}
-                            buttonContent={modalButtonContetnt}
-                        />
-                    </ContentRowDiv>
-                </ContentColDiv>
-            </MainSubDiv>
+                            </MajorityDiv>
+                            <MajoritySubDiv>
+                            </MajoritySubDiv>
+                            <DefaultModal
+                                isOpen={isOpen}
+                                closeModal={closeModal}
+                                title={modalTitle}
+                                content={modalContent}
+                                buttonContent={modalButtonContetnt}
+                            />
+                        </ContentRowDiv>
+                    </ContentColDiv>
+                </MainSubDiv>
+                )
+            }
         </MainDiv>
     )
 }

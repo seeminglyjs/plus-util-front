@@ -13,23 +13,22 @@ import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
 import MainDiv from "@/components/Layout/MainDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
 import HalfAndHalfDiv from "@/components/Layout/HalfAndHalfDiv";
-
-interface UtilInfoInsertResponseDto {
-    auth: boolean,
-    utilName: string,
-    utilDescription: string,
-    utilViews: bigint,
-    utilLikes: bigint,
-    urlPath: string,
-    category: string
-}
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
+import { InputRegex } from "@/components/Regex/InputRegex";
+import DefaultModal from "@/components/Modal/DefaultModal";
+import { UtilInfoInsertResponseDto } from "@/interface/Util/Info/UtilInfoInsertResponseDto";
+import { useRouter } from "next/router";
+import Loading from "@/components/Etc/Loading";
 
 export default function UtilEnroll({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
     const [urlPath, setUrlPath] = useState("");
     const [category, setCategory] = useState("basic");
+    const [utilSubject, setUtilSubject] = useState("");
     const [utilName, setUtilName] = useState("");
-    const [utilDescription, setUtilDescription] = useState("");
+    const [utilDescription, setUtilDescription] = useState("")
+    const router = useRouter()
+
 
     const urlPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -46,15 +45,44 @@ export default function UtilEnroll({ authData }: Props) {
         if (value.length <= 100) setUtilName(value);
     }
 
+    const utilSubjectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (value.length <= 100) setUtilSubject(value);
+    }
+
+
     const utilDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = event.target.value;
         if (value.length <= 500) setUtilDescription(value);
     }
 
     const enrollUtilInfo = async () => {
+        if (!InputRegexFunction(urlPath, InputRegex.UrlPath)) {
+            openModal("입력값 확인", "잘못된 URL 경로 입니다.", "확인")
+            return false;
+        }
+        const tempUtilName = utilName.replace(/\s/g, '');
+        if (tempUtilName.length < 1) {
+            openModal("입력값 확인", "유틸이름은 공백을 제외하고 최소 1글자 이상 입력해야 합니다.", "확인")
+            return false;
+        }
+        const tempUtilSubject = utilSubject.replace(/\s/g, '');
+        if (tempUtilSubject.length < 1) {
+            openModal("입력값 확인", "주제는 공백을 제외하고 최소 1글자 이상 입력해야 합니다.", "확인")
+            return false;
+        }
+        const tempUtilDescription = utilDescription.replace(/\s/g, '');
+        if (tempUtilDescription.length < 20) {
+            openModal("입력값 확인", "설명은 공백을 제외하고 최소 20글자 이상 입력해야 합니다.", "확인")
+            return false;
+        }
+
+
+
         const url = `${process.env.API_BASE_URL}/util/info/enroll`
         const data = {
             utilName: utilName,
+            subject: utilSubject,
             utilDescription: utilDescription,
             urlPath: urlPath,
             category: category,
@@ -74,78 +102,129 @@ export default function UtilEnroll({ authData }: Props) {
         if (!response.ok) {
             const errorMessage = `HTTP error! Status: ${response.status}`;
             console.error(errorMessage);
+            openModal("실패", errorMessage, "확인")
             return;
         } else {
             const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = await response.json();
             console.log(utilInfoInsertResponseDto);
+            if (utilInfoInsertResponseDto.auth) {
+                openModal("성공", "등록요청이 성공했습니다!", "확인")
+            } else {
+                openModal("실패", "이미 등록된 건이거나 \n 등록 중 오류가 발생했습니다.", "확인")
+            }
         }
     }
 
+    let [isOpen, setIsOpen] = useState(false)
+    let [modalTitle, setModalTitle] = useState("확인요청")
+    let [modalContent, setModalContent] = useState("정보를 확인해주세요.")
+    let [modalButtonContetnt, setModalButtonContetnt] = useState("확인")
+
+    function closeModal() {
+        setIsOpen(false)
+    }
+
+    function openModal(title: string, content: string, buttonContent: string) {
+        setModalTitle(current => title)
+        setModalContent(current => content)
+        setModalButtonContetnt(current => buttonContent)
+        setIsOpen(true)
+    }
+
+    useEffect(() => {
+        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+            router.push('/') // Redirect to dashboard if authenticated
+        }
+    }, [authData, authenticated, router])
+
     return (
         <MainDiv>
-            <MainSubDiv>
-                <ContentColDiv>
-                    <ContentRowDiv>
-                        <HalfAndHalfDiv>
-                        </HalfAndHalfDiv>
-                        <HalfDiv>
-                            <div className="pt-48 py-15">
-                                <div className="border border-gray-700 rounded-3xl py-8 px-4">
-                                    <div className="py-8 px-4 mx-auto max-w-3xl">
-                                        <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">유틸 정보 등록</span><BiEditAlt className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiEditAlt>
-                                        </div>
-                                        <form action="#">
-                                            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                                                <div>
-                                                    <label htmlFor="urlPath" className={DefaultClassNames.FormDefaultChangeLabel}>URL 경로</label>
-                                                    <input onChange={urlPathChange} type="text" name="urlPath" id="urlPath" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="/test/test" value={urlPath} />
+            {
+                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                    <Loading></Loading>
+                )
+            }
+            {
+                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                    <MainSubDiv>
+                        <ContentColDiv>
+                            <ContentRowDiv>
+                                <HalfAndHalfDiv>
+                                </HalfAndHalfDiv>
+                                <HalfDiv>
+                                    <div className="pt-48 py-15">
+                                        <div className="border border-gray-700 rounded-3xl py-8 px-4">
+                                            <div className="py-8 px-4 mx-auto max-w-3xl">
+                                                <div className="py-3 my-2 text-center">
+                                                    <span className="text-xl font-bold text-white text-center mr-1">유틸 정보 등록</span><BiEditAlt className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiEditAlt>
                                                 </div>
-                                                <div>
-                                                    <label htmlFor="category" className={DefaultClassNames.FormDefaultChangeLabel}>카테고리</label>
-                                                    <select onChange={categoryChange} id="category" name="category" className={DefaultClassNames.FormDefaultChangeSelect}>
-                                                        <option value="basic">기본유틸</option>
-                                                        <option value="encrypt">암호화</option>
-                                                        <option value="algorithm">알고리즘</option>
-                                                    </select>
-                                                </div>
-                                                <div className="sm:col-span-2">
-                                                    <label htmlFor="utilName" className={DefaultClassNames.FormDefaultChangeLabel}>유틸 명</label>
-                                                    <input onChange={utilNameChange} type="text" name="utilName" id="utilName" className={DefaultClassNames.FormDefaultChangeInput} placeholder="기본유틸" value={utilName} />
-                                                    <p className="text-xs mt-1 text-white">{utilName.length} 글자 수 </p>
-                                                </div>
-                                                <div className="sm:col-span-2">
-                                                    <label htmlFor="utilDescription" className={DefaultClassNames.FormDefaultChangeLabel}>유틸 설명</label>
-                                                    <textarea rows={10} onChange={utilDescriptionChange} id="utilDescription" name="utilDescription" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={utilDescription}></textarea>
-                                                    <p className="text-xs mt-1 text-white">{utilDescription.length} 자  / 최대 500자</p>
-                                                </div>
-                                            </div>
-                                            <div className="text-center">
-                                                {
-                                                    authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
-                                                        <button onClick={enrollUtilInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
-                                                            등록
-                                                        </button>
-                                                    )
-                                                }
-                                                <span className="mx-2"></span>
-                                                <Link href={"/admin/main"}>
-                                                    <button type="button" className={DefaultClassNames.FormDefaultSendButton}>
-                                                        관리자메인
-                                                    </button>
-                                                </Link>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </HalfDiv>
-                        <HalfAndHalfDiv>
+                                                <form action="#">
+                                                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                                        <div>
+                                                            <label htmlFor="urlPath" className={DefaultClassNames.FormDefaultChangeLabel}>URL 경로</label>
+                                                            <input onChange={urlPathChange} type="text" name="urlPath" id="urlPath" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="/test/test" value={urlPath} />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="category" className={DefaultClassNames.FormDefaultChangeLabel}>카테고리</label>
+                                                            <select onChange={categoryChange} id="category" name="category" className={DefaultClassNames.FormDefaultChangeSelect}>
+                                                                <option value="basic">기본유틸</option>
+                                                                <option value="encrypt">암호화</option>
+                                                                <option value="algorithm">알고리즘</option>
+                                                            </select>
+                                                        </div>
 
-                        </HalfAndHalfDiv>
-                    </ContentRowDiv>
-                </ContentColDiv>
-            </MainSubDiv>
+                                                        <div>
+                                                            <label htmlFor="utilSubject" className={DefaultClassNames.FormDefaultChangeLabel}>유틸 주제</label>
+                                                            <input onChange={utilSubjectChange} type="text" name="utilSubject" id="utilSubject" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="기본유틸" value={utilSubject} />
+                                                            <p className="text-xs mt-1 text-white">{utilName.length} 글자 수 </p>
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="utilName" className={DefaultClassNames.FormDefaultChangeLabel}>유틸 명</label>
+                                                            <input onChange={utilNameChange} type="text" name="utilName" id="utilName" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="기본유틸" value={utilName} />
+                                                            <p className="text-xs mt-1 text-white">{utilName.length} 글자 수 </p>
+                                                        </div>
+
+                                                        <div className="sm:col-span-2">
+                                                            <label htmlFor="utilDescription" className={DefaultClassNames.FormDefaultChangeLabel}>유틸 설명</label>
+                                                            <textarea rows={10} onChange={utilDescriptionChange} id="utilDescription" name="utilDescription" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={utilDescription}></textarea>
+                                                            <p className="text-xs mt-1 text-white">{utilDescription.length} 자  / 최대 500자</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        {
+                                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                                <button onClick={enrollUtilInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                                                    등록
+                                                                </button>
+                                                            )
+                                                        }
+                                                        <span className="mx-2"></span>
+                                                        <Link href={"/admin/main"}>
+                                                            <button type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                                                관리자메인
+                                                            </button>
+                                                        </Link>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <DefaultModal
+                                        isOpen={isOpen}
+                                        closeModal={closeModal}
+                                        title={modalTitle}
+                                        content={modalContent}
+                                        buttonContent={modalButtonContetnt}
+                                    />
+                                </HalfDiv>
+                                <HalfAndHalfDiv>
+
+                                </HalfAndHalfDiv>
+                            </ContentRowDiv>
+                        </ContentColDiv>
+                    </MainSubDiv>
+                )
+            }
         </MainDiv>
     )
 }
