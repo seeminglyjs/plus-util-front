@@ -1,10 +1,11 @@
-import ContentColDiv from "../Layout/ContentColDiv";
-import MainDiv from "../Layout/MainDiv";
-import MainSubDiv from "../Layout/MainSubDiv";
-import ContentRowDiv from '../Layout/ContentRowDiv';
-import styles from './styles/Loading.module.css'
-import MajorityDiv from "../Layout/MajorityDiv";
-import MajoritySubDiv from "../Layout/MajoritySubDiv";
+
+import MainDiv from "@/components/Layout/MainDiv"
+import styles from '/components/Etc/styles/Loading.module.css'
+import MainSubDiv from "@/components/Layout/MainSubDiv"
+import ContentColDiv from "@/components/Layout/ContentColDiv"
+import ContentRowDiv from "@/components/Layout/ContentRowDiv"
+import MajoritySubDiv from "@/components/Layout/MajoritySubDiv"
+import MajorityDiv from "@/components/Layout/MajorityDiv"
 
 export default function Loading() {
     return (
@@ -16,7 +17,8 @@ export default function Loading() {
                         
                         </MajoritySubDiv>
                         <MajorityDiv>
-                        <div className="py-72 my-20 flex justify-center align-middle">
+                        
+                            <div className="py-72 my-20 flex justify-center align-middle">
                                 <div className={styles.wheel_and_hamster} aria-label="Orange and tan hamster running in a metal wheel" role="img">
                                     <div className={styles.wheel}></div>
                                     <div className={styles.hamster}>
@@ -35,7 +37,7 @@ export default function Loading() {
                                     </div>
                                     <div className={styles.spoke}></div>
                                 </div>
-                            </div>           
+                            </div>                  
                         </MajorityDiv>
                     <MajoritySubDiv>
 

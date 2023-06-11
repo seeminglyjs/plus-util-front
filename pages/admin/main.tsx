@@ -36,9 +36,9 @@ export default function AdminMian({ authData }: Props) {
                 authData.authorities[0].authority === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
+                            <div className="pt-24 pb-15">
                             <ContentRowDiv>
                                 <HalfDiv>
-                                    <div></div>
                                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 md:p-12 mt-2">
                                         <Link href="/util/info/enroll" className=" text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-green-400 mb-2">
                                             Util Enroll
@@ -86,6 +86,7 @@ export default function AdminMian({ authData }: Props) {
                                     </div>
                                 </HalfDiv>
                             </ContentRowDiv>
+                            </div>
                         </ContentColDiv>
                     </MainSubDiv>
                 )

@@ -7,8 +7,6 @@ import ContentColDiv from '../components/Layout/ContentColDiv';
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
 import { Data } from "@/interface/Index/Data";
-import MajorityDiv from "@/components/Layout/MajorityDiv";
-import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import Link from "next/link";
 
 
