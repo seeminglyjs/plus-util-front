@@ -6,6 +6,7 @@ import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
+import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
 import { AuthData } from "@/interface/Auth/AuthData";
 import { Props } from "@/interface/Auth/Props";
 import { UtilInfoDto } from "@/interface/Util/Info/UtilInfoDto";
@@ -55,7 +56,8 @@ export default function UtilList({ authData }: Props) {
             console.error(errorMessage);
             return;
         } else {
-            const utilInfoGetResponseDto: UtilInfoGetResponseDto = await response.json()
+            const adminRoleResponseDto: AdminRoleResponseDto = await response.json();
+            const utilInfoGetResponseDto: UtilInfoGetResponseDto = adminRoleResponseDto.dto as UtilInfoGetResponseDto
             setIsEmpty(utilInfoGetResponseDto.isEmpty);
             setUtilInfoList(utilInfoGetResponseDto.utilInfoDtoList)
             console.log(utilInfoGetResponseDto);

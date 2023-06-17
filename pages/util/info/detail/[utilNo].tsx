@@ -20,16 +20,18 @@ import { UtilInfoInsertResponseDto } from "@/interface/Util/Info/UtilInfoInsertR
 import { useRouter } from "next/router";
 import Loading from "@/components/Etc/Loading";
 import { UtilInfoDto } from "@/interface/Util/Info/UtilInfoDto";
+import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
 
 export default function UtilDetail({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
-    const [urlPath, setUrlPath] = useState("");
-    const [category, setCategory] = useState("basic");
-    const [utilSubject, setUtilSubject] = useState("");
-    const [utilName, setUtilName] = useState("");
+    const [urlPath, setUrlPath] = useState("")
+    const [category, setCategory] = useState("basic")
+    const [utilSubject, setUtilSubject] = useState("")
+    const [utilName, setUtilName] = useState("")
     const [utilDescription, setUtilDescription] = useState("")
-    const [callUtilInfo, setCallUtilInfo] = useState(false);
+    const [callUtilInfo, setCallUtilInfo] = useState(false)
     const [utilInfoDto, setUtilInfoDto] = useState<UtilInfoDto>()
+    const [updateUtilNo, setUpdateUtilNo] = useState<bigint>(BigInt(-1))
 
     const router = useRouter()
 
@@ -48,9 +50,20 @@ export default function UtilDetail({ authData }: Props) {
                     credentials: 'include',
                 })
 
-                const utilInfoDto: UtilInfoDto = await response.json()
-                setUtilInfoDto(utilInfoDto);
-                setCallUtilInfo(true);
+                const AdminRoleResponseDtoResponse: AdminRoleResponseDto = await response.json()
+                if(!AdminRoleResponseDtoResponse.auth) router.push('/') // 게시글 정보 없음
+                else{
+                    const utilInfoDtoResponse : UtilInfoDto = AdminRoleResponseDtoResponse.dto as UtilInfoDto
+                    setUtilInfoDto(utilInfoDtoResponse);
+                    setCallUtilInfo(true);
+                    
+                    setUpdateUtilNo(utilInfoDtoResponse.utilNo);
+                    setUrlPath(utilInfoDtoResponse.urlPath)
+                    setCategory(utilInfoDtoResponse.category)
+                    setUtilSubject(utilInfoDtoResponse.subject)
+                    setUtilName(utilInfoDtoResponse.utilName)
+                    setUtilDescription(utilInfoDtoResponse.utilDescription)
+                }
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch getNoticeDetail data');
@@ -113,6 +126,7 @@ export default function UtilDetail({ authData }: Props) {
 
         const url = `${process.env.API_BASE_URL}/util/info/enroll`
         const data = {
+            utinNo : updateUtilNo,
             utilName: utilName,
             subject: utilSubject,
             utilDescription: utilDescription,
@@ -137,7 +151,8 @@ export default function UtilDetail({ authData }: Props) {
             openModal("실패", errorMessage, "확인")
             return;
         } else {
-            const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = await response.json();
+            const adminRoleResponseDto: AdminRoleResponseDto = await response.json();
+            const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = adminRoleResponseDto.dto as UtilInfoInsertResponseDto;
             console.log(utilInfoInsertResponseDto);
             if (utilInfoInsertResponseDto.auth) {
                 openModal("성공", "수정요청이 성공했습니다!", "확인")

@@ -19,6 +19,7 @@ import DefaultModal from "@/components/Modal/DefaultModal";
 import { UtilInfoInsertResponseDto } from "@/interface/Util/Info/UtilInfoInsertResponseDto";
 import { useRouter } from "next/router";
 import Loading from "@/components/Etc/Loading";
+import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
 
 export default function UtilEnroll({ authData }: Props) {
     const { name, authorities, authenticated } = authData;
@@ -81,6 +82,7 @@ export default function UtilEnroll({ authData }: Props) {
 
         const url = `${process.env.API_BASE_URL}/util/info/enroll`
         const data = {
+            utilNo : -1,
             utilName: utilName,
             subject: utilSubject,
             utilDescription: utilDescription,
@@ -105,7 +107,8 @@ export default function UtilEnroll({ authData }: Props) {
             openModal("실패", errorMessage, "확인")
             return;
         } else {
-            const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = await response.json();
+            const adminRoleResponseDto: AdminRoleResponseDto = await response.json();
+            const utilInfoInsertResponseDto: UtilInfoInsertResponseDto = adminRoleResponseDto.dto as UtilInfoInsertResponseDto;
             console.log(utilInfoInsertResponseDto);
             if (utilInfoInsertResponseDto.auth) {
                 openModal("성공", "등록요청이 성공했습니다!", "확인")
