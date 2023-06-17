@@ -21,7 +21,7 @@ export default function AdminMian({ authData }: Props) {
 
     useEffect(() => {
         if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
-            router.push('/') // Redirect to dashboard if authenticated
+            router.push('/')
         }
     }, [authData, authenticated, router])
 
