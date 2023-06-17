@@ -72,7 +72,7 @@ export default function UtilDetail({ authData }: Props) {
         }
         getUtilDetail(Number(utilNo));
 
-    },[router.query])
+    },[router, router.query])
 
 
     const urlPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
