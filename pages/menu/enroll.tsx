@@ -23,9 +23,10 @@ import React from "react";
 interface MenuEnrollResponseDto {
     success: boolean,
     menuObject: object,
-    type: string
-}
+    type: string,
+    message: string
 
+}
 interface MenuNav {
     navName: string
 }
@@ -38,7 +39,25 @@ interface Menu {
     headName: string,
     menuName: string,
     url: string,
+} 
+interface MenuNavRes {
+    navNo: bigint,
+    navName: string
 }
+interface MenuHeadRes {
+    navNo: bigint,
+    headNo: bigint,
+    navName: string,
+    headName: string
+}
+interface MenuRes {
+    menuNo: bigint,
+    headNo: bigint,
+    headName: string,
+    menuName: string,
+    url: string,
+}
+
 
 export default function MenuList({ authData }: Props) {
     const { name, authorities, authenticated } = authData
@@ -49,7 +68,9 @@ export default function MenuList({ authData }: Props) {
     const [navName, setNavName] = useState("")
     const [headName, setHeadName] = useState("")
     const [menuName, setMenuName] = useState("")
-    const [navList, setNavList] = useState<MenuNav[]>([])
+    const [navList, setNavList] = useState<MenuNavRes[]>([])
+    const [headList, setHeadList] = useState<MenuHeadRes[]>([])
+    const [menuList, setMenuList] = useState<MenuRes[]>([])
     const router = useRouter()
 
 
@@ -61,11 +82,19 @@ export default function MenuList({ authData }: Props) {
         } else if (value === "head") {
             if (navList.length !== 0) {
                 setDynamicInputs(headInput)
-            }else{
-                setMenuType("nav")
+            } else {
+                event.target.value = "nav"
+                setDynamicInputs(navInput)
+                openModal("확인", "네비게이션 정보를 우선 등록해주세요.", "확인")
             }
         } else {//menu
-            setDynamicInputs(menuInput)
+            if (headList.length !== 0) {
+                setDynamicInputs(menuInput)
+            } else {
+                event.target.value = "nav"
+                setDynamicInputs(navInput)
+                openModal("확인", "주 메뉴 정보를 우선 등록해주세요.", "확인")
+            }
         }
     }
 
@@ -107,7 +136,7 @@ export default function MenuList({ authData }: Props) {
             <label htmlFor="navName" className={DefaultClassNames.FormDefaultChangeLabel}>네비게이션명</label>
             <select onChange={navNameSelectChange} id="navName" name="navName" className={DefaultClassNames.FormDefaultChangeSelect}>
                 {navList.map((nav) => (
-                    <option key={nav.navName} value={nav.navName}>{nav.navName}</option>
+                    <option key={nav.navName} value={String(nav.navNo)}>{nav.navName}</option>
                 ))}
             </select>
         </div>),
@@ -122,15 +151,15 @@ export default function MenuList({ authData }: Props) {
         (<div key="menuInputNavName" className="sm:col-span-2">
             <label htmlFor="headName" className={DefaultClassNames.FormDefaultChangeLabel}>주 메뉴명</label>
             <select onChange={headNameSelectChange} id="headName" name="headName" className={DefaultClassNames.FormDefaultChangeSelect}>
-                <option value="nav">네비게이션</option>
-                <option value="head">주메뉴</option>
-                <option value="menu">메뉴</option>
+                {headList.map((head) => (
+                    <option key={head.headName} value={String(head.headNo)}>{head.headName}</option>
+                ))}
             </select>
         </div>),
 
         (<div key="menuInputMenuName">
             <label htmlFor="menuName" className={DefaultClassNames.FormDefaultChangeLabel}>메뉴명</label>
-            <input onChange={headNameChange} type="text" name="menuName" id="menuName" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="menu" />
+            <input onChange={menuNameChange} type="text" name="menuName" id="menuName" className={DefaultClassNames.FormDefaultChangeInputSmall} placeholder="menu" />
         </div>),
 
         (<div key="menuInputUrlPath">
@@ -187,15 +216,15 @@ export default function MenuList({ authData }: Props) {
         } else {
             const menuEnrollResponseDto: MenuEnrollResponseDto = await response.json();
             if (menuEnrollResponseDto.success) {
-                openModal("성공", "등록요청이 성공했습니다!", "확인")
+                openModal("성공", menuEnrollResponseDto.message, "확인")
             } else {
-                openModal("실패", "이미 등록된 건이거나 \n 등록 중 오류가 발생했습니다.", "확인")
+                openModal("실패", menuEnrollResponseDto.message, "확인")
             }
         }
     }
 
-    const getNavList = async () => {
-        const url = `${process.env.API_BASE_URL}/nav/list`
+    const getSomeMenuList = async (name: string) => {
+        const url = `${process.env.API_BASE_URL}/${name}/list`
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -209,8 +238,17 @@ export default function MenuList({ authData }: Props) {
             openModal("실패", errorMessage, "확인")
             return []
         } else {
-            const menuNavList: MenuNav[] = await response.json()
-            setNavList(menuNavList)
+            if (name === "nav") {
+                const menuNavList: MenuNavRes[] = await response.json()
+                setNavList(menuNavList)
+            } else if (name === "head") {
+                const menuHeadList: MenuHeadRes[] = await response.json()
+                setHeadList(menuHeadList)
+            } else if (name === "menu") {
+                const menuList: MenuRes[] = await response.json()
+                setMenuList(menuList)
+            }
+
         }
     }
 
@@ -225,6 +263,8 @@ export default function MenuList({ authData }: Props) {
     }
 
     function openModal(title: string, content: string, buttonContent: string) {
+        getSomeMenuList("nav")
+        getSomeMenuList("head")
         setModalTitle(current => title)
         setModalContent(current => content)
         setModalButtonContetnt(current => buttonContent)
@@ -239,8 +279,10 @@ export default function MenuList({ authData }: Props) {
 
     useEffect(() => {
         setDynamicInputs(navInput)
-        getNavList()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        getSomeMenuList("nav")
+        getSomeMenuList("head")
+        //getSomeMenuList("menu")
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
