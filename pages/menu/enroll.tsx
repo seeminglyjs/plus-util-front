@@ -66,7 +66,9 @@ export default function MenuList({ authData }: Props) {
 
     const [urlPath, setUrlPath] = useState("")
     const [navName, setNavName] = useState("")
+    const [navNo, setNavNo] = useState(0)
     const [headName, setHeadName] = useState("")
+    const [headNo, setHeadNo] = useState(0)
     const [menuName, setMenuName] = useState("")
     const [navList, setNavList] = useState<MenuNavRes[]>([])
     const [headList, setHeadList] = useState<MenuHeadRes[]>([])
@@ -85,6 +87,7 @@ export default function MenuList({ authData }: Props) {
             } else {
                 event.target.value = "nav"
                 setDynamicInputs(navInput)
+                setMenuType("nav")
                 openModal("확인", "네비게이션 정보를 우선 등록해주세요.", "확인")
             }
         } else {//menu
@@ -93,11 +96,21 @@ export default function MenuList({ authData }: Props) {
             } else {
                 event.target.value = "nav"
                 setDynamicInputs(navInput)
+                setMenuType("nav")
                 openModal("확인", "주 메뉴 정보를 우선 등록해주세요.", "확인")
             }
         }
     }
 
+    function trimmedStrLenCheck10(str:string){
+        const trimmedStr = str.replace(/\s/g, "") // 정규식을 사용하여 공백 제거
+        const length = trimmedStr.length
+        if(length < 5){
+            return false
+        }else{
+            return true
+        }
+    }
 
     const navNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -105,7 +118,13 @@ export default function MenuList({ authData }: Props) {
     }
     const navNameSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
-        setNavName(value);
+        const parts = value.split('_');
+        if(parts.length < 2 || parts.length > 2){
+            openModal("Error!", "메뉴 등록 시스템에 문제가 있습니다.", "확인")
+        }else{
+            setNavNo(parseInt(parts[0]))
+            setNavName(parts[1]);
+        }
     }
     const headNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -113,6 +132,13 @@ export default function MenuList({ authData }: Props) {
     }
     const headNameSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
+        const parts = value.split('_');
+        if(parts.length < 2 || parts.length > 2){
+            openModal("Error!", "메뉴 등록 시스템에 문제가 있습니다.", "확인")
+        }else{
+            setHeadNo(parseInt(parts[0]))
+            setHeadName(parts[1]);
+        }
         setHeadName(value);
     }
     const menuNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +162,7 @@ export default function MenuList({ authData }: Props) {
             <label htmlFor="navName" className={DefaultClassNames.FormDefaultChangeLabel}>네비게이션명</label>
             <select onChange={navNameSelectChange} id="navName" name="navName" className={DefaultClassNames.FormDefaultChangeSelect}>
                 {navList.map((nav) => (
-                    <option key={nav.navName} value={String(nav.navNo)}>{nav.navName}</option>
+                    <option key={String(nav.navNo)} value={nav.navNo+"_"+nav.navName}>{nav.navName}</option>
                 ))}
             </select>
         </div>),
@@ -152,7 +178,7 @@ export default function MenuList({ authData }: Props) {
             <label htmlFor="headName" className={DefaultClassNames.FormDefaultChangeLabel}>주 메뉴명</label>
             <select onChange={headNameSelectChange} id="headName" name="headName" className={DefaultClassNames.FormDefaultChangeSelect}>
                 {headList.map((head) => (
-                    <option key={head.headName} value={String(head.headNo)}>{head.headName}</option>
+                    <option key={String(head.headNo)} value={head.headNo+"_"+headName}>{head.headName}</option>
                 ))}
             </select>
         </div>),
@@ -179,24 +205,46 @@ export default function MenuList({ authData }: Props) {
         let data = {};
         const url = `${process.env.API_BASE_URL}/menu/enroll`
         if (menuType === "nav") {
-            data = {
-                type: "nav",
-                menuObject: { navName: navName }
-            };
-        } else if (menuType === "head") {
-            data = {
-                type: "head",
-                menuObject: { headName: headName, navName: navName }
-            };
-        } else { // 메뉴 타입일 경우
-            data = {
-                type: "menu",
-                menuObject: {
-                    headName: headName,
-                    menuName: menuName,
-                    url: urlPath
+            if(trimmedStrLenCheck10(navName)){
+                data = {
+                    type: "nav",
+                    menuObject: { navName: navName }
                 }
-            };
+            }else{
+                openModal("입력값 확인", "네비게이션 명은 5 ~ 20 자 사이입니다.", "확인")
+                return
+            }
+        } else if (menuType === "head") {
+            if(trimmedStrLenCheck10(headName)){
+                data = {
+                    type: "head",
+                    menuObject: { 
+                        headName: headName, 
+                        navName: navName,
+                        navNo : navNo
+                    }
+                };
+            }else{
+                openModal("입력값 확인", "주메뉴 명은 5 ~ 20 자 사이입니다.", "확인")
+                return
+            }
+            
+        } else { // 메뉴 타입일 경우
+            if(trimmedStrLenCheck10(menuName)){
+                data = {
+                    type: "menu",
+                    menuObject: {
+                        headName: headName,
+                        headNo : headNo,
+                        menuName: menuName,
+                        url: urlPath
+                    }
+                };
+            }else{
+                openModal("입력값 확인", "메뉴 명은 5 ~ 20 자 사이입니다.", "확인")
+                return
+            }
+            
         }
 
         const response = await fetch(url, {
@@ -241,16 +289,23 @@ export default function MenuList({ authData }: Props) {
             if (name === "nav") {
                 const menuNavList: MenuNavRes[] = await response.json()
                 setNavList(menuNavList)
+                if(menuNavList.length > 0){
+                    setNavNo(Number(menuNavList[0].navNo))
+                }
             } else if (name === "head") {
                 const menuHeadList: MenuHeadRes[] = await response.json()
+                setNavList(menuHeadList)
+                if(menuHeadList.length > 0){
+                    setHeadNo(Number(menuHeadList[0].headNo))
+                }
                 setHeadList(menuHeadList)
             } else if (name === "menu") {
                 const menuList: MenuRes[] = await response.json()
                 setMenuList(menuList)
             }
-
         }
     }
+
 
 
     let [isOpen, setIsOpen] = useState(false)
