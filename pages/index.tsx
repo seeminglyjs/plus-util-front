@@ -6,18 +6,25 @@ import MainSubDiv from '../components/Layout/MainSubDiv';
 import ContentColDiv from '../components/Layout/ContentColDiv';
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
-import { Data } from "@/interface/Index/Data";
+import { GitData } from "@/interface/Index/GitData";
 import Link from "next/link";
-
+import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
+import { Data } from "@/interface/Index/Data";
+import { UtilInfoDto } from "@/interface/Util/Info/UtilInfoDto";
+import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
+import { UtilInfoGetResponseDto } from "@/interface/Util/Info/UtilInfoGetResponseDto";
+import { BiHeart,BiMouseAlt } from "react-icons/bi";
 
 export default function HomePage({ datas }: any) {
-  const data: Data = datas;
-  const [dataCheck, setDataCheck] = useState(false);
+  const gitData: GitData = datas.gitData;
+  const [topUtilArr, setTopUtilArr] = useState<UtilInfoDto[]>(datas.utilInfoDtoArr);
+  const [getDataCheck, setGitDataCheck] = useState(false);
+
   useEffect(() => {
-    if (data !== null) {
-      setDataCheck(true);
+    if (gitData !== null) {
+      setGitDataCheck(true);
     }
-  }, [data])
+  }, [gitData])
 
   return (
     <div>
@@ -33,11 +40,28 @@ export default function HomePage({ datas }: any) {
                     Rank
                   </a>
                   <h1 className="text-white text-3xl md:text-5xl font-extrabold mb-2">Top Util</h1>
-                  <p className="text-lg font-normal text-gray-400 mb-2 hover:underline hover:cursor-pointer">1. 텍스트 도구 : 문자열에 다양한 방법으로 변환시킬 수 있습니다. </p>
-                  <p className="text-lg font-normal text-gray-400 mb-2">2. Static websites are now used to bootstrap lots of websites and are </p>
-                  <p className="text-lg font-normal text-gray-400 mb-2">3. Static websites are now used to bootstrap lots of websites and are </p>
-                  <p className="text-lg font-normal text-gray-400 mb-2">4. Static websites are now used to bootstrap lots of websites and are </p>
-                  <p className="text-lg font-normal text-gray-400 mb-2">5. Static websites are now used to bootstrap lots of websites and are </p>
+                  {!topUtilArr && (
+                    <p className={DefaultClassNames.indexUtilTopListP}> 현재 등록된 유틸 정보가 없습니다.</p>
+                  )
+                  }
+
+                  {
+                    topUtilArr.map((topUtil, index) => (
+                      <p key={topUtil.utilNo.toString()} className={DefaultClassNames.indexUtilTopListP}>
+                          <Link href={topUtil.urlPath}><span className="mx-1">{index + 1}. <b>[{topUtil.subject}]</b> {topUtil.utilName} </span>
+                          
+                          <a href="#" className={DefaultClassNames.indexUtilTopLikeA}>
+                            좋아요 <BiHeart className="inline ml-1"></BiHeart> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilLikes}</span>
+                          </a>
+                          
+                          <span className="mx-1"></span>
+                          
+                          <a href="#" className={DefaultClassNames.indexUtilTopViewA}>
+                            조회수 <BiMouseAlt className="inline ml-1"></BiMouseAlt> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilLikes}</span>
+                          </a></Link>
+                      </p>
+                    ))
+                  }
                   <a href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-900">
                     Read more
                   </a>
@@ -49,7 +73,7 @@ export default function HomePage({ datas }: any) {
                   Source Code List
                 </p>
                 <div className="pt-3">
-                  {dataCheck && (data.githubLanguagesList.map((codeMap) => (
+                  {getDataCheck && (gitData.githubLanguagesList.map((codeMap) => (
                     <div className="mt-3" key={codeMap.gkey}>
                       <div className="flex justify-between mb-1">
                         <span className="text-base font-medium dark:text-white">{codeMap.gkey}</span>
@@ -60,7 +84,7 @@ export default function HomePage({ datas }: any) {
                       </div>
                     </div>
                   )))}
-                  {!dataCheck && (
+                  {!getDataCheck && (
                     <div className="text-xl font-semibold"><p>소스 코드 정보를 불러오는 중입니다. . . .</p></div>
                   )
                   }
@@ -101,9 +125,16 @@ export default function HomePage({ datas }: any) {
 }
 
 export async function getStaticProps() {
-  const res = await api.get('/home')
-  const datas: Data = await res.data
+  const res1 = await api.get("/home")
+  const gitData: GitData = await res1.data
 
+  const res2 = await api.get("/util/info/top/list")
+  const utilInfoGetResponseDto: UtilInfoGetResponseDto = await res2.data
+  const utilInfoDtoArr: UtilInfoDto[] = utilInfoGetResponseDto.utilInfoDtoList as UtilInfoDto[]
+  const datas: Data = {
+    gitData: gitData,
+    utilInfoDtoArr: utilInfoDtoArr
+  }
   return {
     props: {
       datas,

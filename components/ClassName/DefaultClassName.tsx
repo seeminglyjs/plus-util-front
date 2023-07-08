@@ -11,6 +11,10 @@ export const DefaultClassNames = {
     FormDefaultSendButton:"bg-gray-800 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800",
 
     listGroupDefaultDiv : "w-90 text-sm font-medium text-white border-plusGreen150 rounded-lg",
-    listGroupDefaultA : "block w-full px-4 py-2 border-b border-plusGreen150 rounded-t-lg cursor-pointer hover:text-plusGreen200 focus:outline-none focus:ring-2"
+    listGroupDefaultA : "block w-full px-4 py-2 border-b border-plusGreen150 rounded-t-lg cursor-pointer hover:text-plusGreen200 focus:outline-none focus:ring-2",
+
+    indexUtilTopListP : "text-lg font-normal text-gray-400 mb-2 transition-transform duration-500 hover:scale-105 hover:cursor-pointer",
+    indexUtilTopLikeA : "text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-red-400 mb-2",
+    indexUtilTopViewA : "text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-sky-500 mb-2",
 
 }

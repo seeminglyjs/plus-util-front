@@ -1,8 +1,7 @@
-import { GithubLanguages } from "./GithubLanguages";
-
+import { UtilInfoDto } from "../Util/Info/UtilInfoDto";
+import { GitData } from "./GitData";
 
 export interface Data {
-    code: string;
-    githubCodeSum: number;
-    githubLanguagesList: [GithubLanguages];
-  };
+    gitData : GitData,
+    utilInfoDtoArr : UtilInfoDto[]
+}

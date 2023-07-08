@@ -7,7 +7,7 @@ import MainDiv from "@/components/Layout/MainDiv";
 import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import { BiLockOpen } from "react-icons/bi";
 import Accordion from '../../components/Etc/Accordion';
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
@@ -15,6 +15,10 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
 import { AesEncryptResponseDto } from '@/interface/Encrypt/Aes/AesEncryptResponseDto';
 import { AesDecryptResponseDto } from "@/interface/Encrypt/Aes/AesDecryptResponseDto";
+import { GetServerSideProps } from "next";
+import { UtilPagePropsDto } from "@/interface/Util/UtilPageProps";
+import { useRouter } from "next/router";
+import { UtilInfoDto } from '../../interface/Util/Info/UtilInfoDto';
 
 export default function Aes() {
     const [aesWay, setAesWay] = useState("encrypt");
@@ -23,7 +27,8 @@ export default function Aes() {
     const [aesIv, setAesIv] = useState("");
     const [aesContent, setAesContent] = useState("");
     const [aesResult, setAesResult] = useState("적절합 값을 먼저 입력해주세요.");
-
+    const [UtilInfoDto, setUitlInfoDto] = useState({} as UtilInfoDto)
+    const router = useRouter();
 
     const aesWayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
@@ -101,6 +106,37 @@ export default function Aes() {
             }
         }
     }
+
+    const getUtilInfoByUrlPath =async () => { 
+        const currentPath = router.pathname;
+
+        const data = {
+            urlPath: currentPath
+        };
+    
+        const url = `${process.env.API_BASE_URL}/util/info/detail/url`
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            const errorMessage = `HTTP error! Status: ${response.status}`;
+            console.error(errorMessage);
+        }
+    
+        const jsonData = await response.json();
+        const utilInfoDto = jsonData.data;
+        setUitlInfoDto(utilInfoDto)
+    }
+
+    useEffect(() => {
+        getUtilInfoByUrlPath()
+      }, [])
 
     return (
         <MainDiv>
@@ -204,3 +240,41 @@ export default function Aes() {
         </MainDiv>
     )
 }
+
+
+export const getServerSideProps: GetServerSideProps<UtilPagePropsDto> = async (context) => {
+    // 요청 객체에 접근
+    const { req } = context;
+  
+    // 현재 URL 가져오기
+    const currentPath = req.url;
+    
+    const data = {
+        urlPath: currentPath
+    };
+
+    const url = `${process.env.API_BASE_URL}/util/info/detail/url`
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(data)
+    });
+    
+    console.log(response)
+    if (!response.ok) {
+        const errorMessage = `HTTP error! Status: ${response.status}`;
+        console.error(errorMessage);
+    }
+
+    const jsonData = await response.json();
+    const utilInfoDto = jsonData.data;
+
+    return {
+      props: {
+        data: utilInfoDto
+      }
+    };
+  };
