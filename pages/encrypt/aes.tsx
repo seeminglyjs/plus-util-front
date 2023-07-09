@@ -16,18 +16,31 @@ import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
 import { AesEncryptResponseDto } from '@/interface/Encrypt/Aes/AesEncryptResponseDto';
 import { AesDecryptResponseDto } from "@/interface/Encrypt/Aes/AesDecryptResponseDto";
 import { GetServerSideProps } from "next";
-import { UtilPagePropsDto } from "@/interface/Util/UtilPageProps";
-import { useRouter } from "next/router";
 import { UtilInfoDto } from '../../interface/Util/Info/UtilInfoDto';
+import { AiOutlineLike, AiFillLike, AiFillEye } from "react-icons/ai";
+import { useRouter } from 'next/router';
+import { Props } from "@/interface/Auth/Props";
+import { ParsedUrlQuery } from "querystring";
+import { AuthData } from "@/interface/Auth/AuthData";
+import { fetchAuthData } from "@/function/auth/GetAuthencation";
 
-export default function Aes() {
+interface UtilLikeCheckResponseDto {
+    ip: string,
+    like: boolean
+}
+
+
+export default function Aes({ authData }: Props) {
+    const { name, authorities, authenticated } = authData;
     const [aesWay, setAesWay] = useState("encrypt");
     const [aesType, setAesType] = useState("256");
     const [aesKey, setAesKey] = useState("");
     const [aesIv, setAesIv] = useState("");
     const [aesContent, setAesContent] = useState("");
     const [aesResult, setAesResult] = useState("적절합 값을 먼저 입력해주세요.");
-    const [UtilInfoDto, setUitlInfoDto] = useState({} as UtilInfoDto)
+    const [utilInfoDto, setUitlInfoDto] = useState({} as UtilInfoDto);
+    const [requetIp, setRequestIp] = useState("");
+    const [isLike, setIsLike] = useState(false);
     const router = useRouter();
 
     const aesWayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,8 +73,8 @@ export default function Aes() {
     }
 
     const aesRequestCheck = () => {
-        if (InputRegexFunction(aesKey,InputRegex.AesKey)) {
-            if (InputRegexFunction(aesIv,InputRegex.AesIv)) {
+        if (InputRegexFunction(aesKey, InputRegex.AesKey)) {
+            if (InputRegexFunction(aesIv, InputRegex.AesIv)) {
                 if (isValidAesContent(aesContent)) return true;
                 else false;
             } else return false;
@@ -107,13 +120,13 @@ export default function Aes() {
         }
     }
 
-    const getUtilInfoByUrlPath =async () => { 
+    const getUtilInfoByUrlPath = async () => {
         const currentPath = router.pathname;
 
         const data = {
             urlPath: currentPath
         };
-    
+
         const url = `${process.env.API_BASE_URL}/util/info/detail/url`
         const response = await fetch(url, {
             method: "POST",
@@ -123,20 +136,86 @@ export default function Aes() {
             credentials: 'include',
             body: JSON.stringify(data)
         });
-        
+
         if (!response.ok) {
             const errorMessage = `HTTP error! Status: ${response.status}`;
             console.error(errorMessage);
         }
-    
+
         const jsonData = await response.json();
         const utilInfoDto = jsonData.data;
         setUitlInfoDto(utilInfoDto)
+        viewUtilInfoToday(utilInfoDto.utilNo)
+        likeUtilInfoCheck()
     }
+
+    const viewUtilInfoToday = async (utilNo: bigint) => {
+        const data = {
+            utilNo: utilNo
+        };
+        const url = `${process.env.API_BASE_URL}/util/info/view/click`
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        })
+        if (!response.ok) {
+            const errorMessage = `HTTP error! Status: ${response.status}`;
+            console.error(errorMessage);
+        }
+    }
+
+    const likeUtilInfoCheck = async () => {
+        const url = `${process.env.API_BASE_URL}/util/info/like/check`
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        })
+        if (!response.ok) {
+            const errorMessage = `HTTP error! Status: ${response.status}`;
+            console.error(errorMessage);
+        } else {
+            const utilLikeCheckResponseDto: UtilLikeCheckResponseDto = await response.json();
+            setIsLike(utilLikeCheckResponseDto.like);
+        }
+    }
+
+    const utilInfoLike = async (utilNo: bigint) => {
+        const data = {
+            utilNo: utilNo
+        };
+        const url = `${process.env.API_BASE_URL}/util/info/like`
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        })
+        if (!response.ok) {
+            const errorMessage = `HTTP error! Status: ${response.status}`;
+            console.error(errorMessage);
+        } else {
+            setIsLike(true)
+        }
+    }
+
+    // Define a separate event handler function
+    const handleLikeClick = () => {
+        utilInfoLike(utilInfoDto.utilNo);
+    };
 
     useEffect(() => {
         getUtilInfoByUrlPath()
-      }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <MainDiv>
@@ -205,7 +284,30 @@ export default function Aes() {
                                                     확인
                                                 </button>
                                             </div>
+
                                         </form>
+                                        <span>
+                                            {
+                                                isLike && (
+                                                    <span className="mt-2">
+                                                        <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
+                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilViews}</span>
+                                                        <AiFillLike className="inline mx-1 text-2xl hover:cursor-pointer">{utilInfoDto.utilLikes}</AiFillLike>
+                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilLikes}</span>
+                                                    </span>
+                                                )
+                                            }
+                                            {
+                                                !isLike && (
+                                                    <span className="mt-2">
+                                                        <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
+                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilViews}</span>
+                                                        <AiOutlineLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeClick}>{utilInfoDto.utilLikes}</AiOutlineLike>
+                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilLikes}</span>
+                                                    </span>
+                                                )
+                                            }
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -241,40 +343,11 @@ export default function Aes() {
     )
 }
 
-
-export const getServerSideProps: GetServerSideProps<UtilPagePropsDto> = async (context) => {
-    // 요청 객체에 접근
-    const { req } = context;
-  
-    // 현재 URL 가져오기
-    const currentPath = req.url;
-    
-    const data = {
-        urlPath: currentPath
-    };
-
-    const url = `${process.env.API_BASE_URL}/util/info/detail/url`
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-    });
-    
-    console.log(response)
-    if (!response.ok) {
-        const errorMessage = `HTTP error! Status: ${response.status}`;
-        console.error(errorMessage);
-    }
-
-    const jsonData = await response.json();
-    const utilInfoDto = jsonData.data;
-
+export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
+    const authData: AuthData = await fetchAuthData(req);
     return {
-      props: {
-        data: utilInfoDto
-      }
+        props: {
+            authData,
+        },
     };
-  };
+};

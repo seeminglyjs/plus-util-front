@@ -57,7 +57,7 @@ export default function HomePage({ datas }: any) {
                           <span className="mx-1"></span>
                           
                           <a href="#" className={DefaultClassNames.indexUtilTopViewA}>
-                            조회수 <BiMouseAlt className="inline ml-1"></BiMouseAlt> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilLikes}</span>
+                            조회수 <BiMouseAlt className="inline ml-1"></BiMouseAlt> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilViews}</span>
                           </a></Link>
                       </p>
                     ))
