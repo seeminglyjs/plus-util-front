@@ -36,9 +36,9 @@ export default function HomePage({ datas }: any) {
             <ContentRowDiv>
               <HalfDiv>
                 <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 md:p-12 mb-8">
-                  <a href="#" className="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-blue-400 mb-2">
+                  <Link href="#" className="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-blue-400 mb-2">
                     Rank
-                  </a>
+                  </Link>
                   <h1 className="text-white text-3xl md:text-5xl font-extrabold mb-2">Top Util</h1>
                   {!topUtilArr && (
                     <p className={DefaultClassNames.indexUtilTopListP}> 현재 등록된 유틸 정보가 없습니다.</p>
@@ -49,22 +49,23 @@ export default function HomePage({ datas }: any) {
                     topUtilArr.map((topUtil, index) => (
                       <p key={topUtil.utilNo.toString()} className={DefaultClassNames.indexUtilTopListP}>
                           <Link href={topUtil.urlPath}><span className="mx-1">{index + 1}. <b>[{topUtil.subject}]</b> {topUtil.utilName} </span>
+                          </Link>
                           
-                          <a href="#" className={DefaultClassNames.indexUtilTopLikeA}>
+                          <Link href="#" className={DefaultClassNames.indexUtilTopLikeA}>
                             좋아요 <BiHeart className="inline ml-1"></BiHeart> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilLikes}</span>
-                          </a>
+                          </Link>
                           
                           <span className="mx-1"></span>
                           
-                          <a href="#" className={DefaultClassNames.indexUtilTopViewA}>
+                          <Link href="#" className={DefaultClassNames.indexUtilTopViewA}>
                             조회수 <BiMouseAlt className="inline ml-1"></BiMouseAlt> <span className="mx-1">:</span> <span className="ml-1">{topUtil.utilViews}</span>
-                          </a></Link>
+                          </Link>
                       </p>
                     ))
                   }
-                  <a href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-900">
+                  <Link href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-900">
                     Read more
-                  </a>
+                  </Link>
                 </div>
               </HalfDiv>
 
@@ -124,7 +125,7 @@ export default function HomePage({ datas }: any) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res1 = await api.get("/home")
   const gitData: GitData = await res1.data
 
@@ -135,6 +136,7 @@ export async function getStaticProps() {
     gitData: gitData,
     utilInfoDtoArr: utilInfoDtoArr
   }
+
   return {
     props: {
       datas,

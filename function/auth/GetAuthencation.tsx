@@ -18,5 +18,6 @@ export async function fetchAuthData(req: any): Promise<AuthData> {
     }
 
     const authData: AuthData = await response.json();
+    // console.log(authData)
     return authData;
 }
