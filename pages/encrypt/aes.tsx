@@ -23,15 +23,13 @@ import { Props } from "@/interface/Auth/Props";
 import { ParsedUrlQuery } from "querystring";
 import { AuthData } from "@/interface/Auth/AuthData";
 import { fetchAuthData } from "@/function/auth/GetAuthencation";
-
-interface UtilLikeCheckResponseDto {
-    ip: string,
-    like: boolean
-}
+import { UtilLikeResponseDto } from "@/interface/Encrypt/Aes/UtilLikeResponseDto";
+import { UtilLikeRevokeResponseDto } from "@/interface/Encrypt/Aes/UtilLikeRevokeResponseDto";
+import { getUtilInfoByUrlPath, likeUtilInfoCheck, utilInfoLike, utilInfoLikeRevoke, viewUtilInfoToday } from "@/function/util/UtilViewAndLikeFunction";
 
 
-export default function Aes({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+
+export default function Aes() {
     const [aesWay, setAesWay] = useState("encrypt");
     const [aesType, setAesType] = useState("256");
     const [aesKey, setAesKey] = useState("");
@@ -39,8 +37,9 @@ export default function Aes({ authData }: Props) {
     const [aesContent, setAesContent] = useState("");
     const [aesResult, setAesResult] = useState("적절합 값을 먼저 입력해주세요.");
     const [utilInfoDto, setUitlInfoDto] = useState({} as UtilInfoDto);
-    const [requetIp, setRequestIp] = useState("");
     const [isLike, setIsLike] = useState(false);
+    const [likeCount, setLikeCount] = useState(BigInt(0));
+    const [viewCount, setViewCount] = useState(BigInt(0));
     const router = useRouter();
 
     const aesWayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -120,100 +119,36 @@ export default function Aes({ authData }: Props) {
         }
     }
 
-    const getUtilInfoByUrlPath = async () => {
+    const settingUtilInfo =async () => {
         const currentPath = router.pathname;
-
-        const data = {
-            urlPath: currentPath
-        };
-
-        const url = `${process.env.API_BASE_URL}/util/info/detail/url`
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-        }
-
-        const jsonData = await response.json();
-        const utilInfoDto = jsonData.data;
+        const utilInfoDto : UtilInfoDto = await getUtilInfoByUrlPath(currentPath)
         setUitlInfoDto(utilInfoDto)
         viewUtilInfoToday(utilInfoDto.utilNo)
-        likeUtilInfoCheck()
+        const requestLike : boolean = await likeUtilInfoCheck();
+        setIsLike(requestLike) 
+        setViewCount(BigInt(utilInfoDto.utilViews))
+        setLikeCount(BigInt(utilInfoDto.utilLikes))
     }
 
-    const viewUtilInfoToday = async (utilNo: bigint) => {
-        const data = {
-            utilNo: utilNo
-        };
-        const url = `${process.env.API_BASE_URL}/util/info/view/click`
-        const response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        })
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-        }
-    }
-
-    const likeUtilInfoCheck = async () => {
-        const url = `${process.env.API_BASE_URL}/util/info/like/check`
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-        })
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-        } else {
-            const utilLikeCheckResponseDto: UtilLikeCheckResponseDto = await response.json();
-            setIsLike(utilLikeCheckResponseDto.like);
-        }
-    }
-
-    const utilInfoLike = async (utilNo: bigint) => {
-        const data = {
-            utilNo: utilNo
-        };
-        const url = `${process.env.API_BASE_URL}/util/info/like`
-        const response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        })
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-        } else {
-            setIsLike(true)
-        }
-    }
-
-    // Define a separate event handler function
-    const handleLikeClick = () => {
-        utilInfoLike(utilInfoDto.utilNo);
+    const handleLikeClick = async () => {
+       const utilLikeResponseDto : UtilLikeResponseDto | null = await utilInfoLike(utilInfoDto.utilNo);
+       if(utilLikeResponseDto !== null){
+            setIsLike(utilLikeResponseDto.like)
+            setLikeCount(utilLikeResponseDto.likeCount)
+       }
     };
 
+    const handleLikeRevokeClick = async () => {
+        const utilLikeRevokeResponseDto: UtilLikeRevokeResponseDto | null = await utilInfoLikeRevoke(utilInfoDto.utilNo);
+        if(utilLikeRevokeResponseDto !== null){
+            setIsLike(utilLikeRevokeResponseDto.like)
+            setLikeCount(utilLikeRevokeResponseDto.likeCount)
+        }
+    };
+
+
     useEffect(() => {
-        getUtilInfoByUrlPath()
+        settingUtilInfo()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -291,9 +226,9 @@ export default function Aes({ authData }: Props) {
                                                 isLike && (
                                                     <span className="mt-2">
                                                         <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
-                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilViews}</span>
-                                                        <AiFillLike className="inline mx-1 text-2xl hover:cursor-pointer">{utilInfoDto.utilLikes}</AiFillLike>
-                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilLikes}</span>
+                                                        <span className="inline mx-1 text-sm">{viewCount.toString()}</span>
+                                                        <AiFillLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeRevokeClick}>{likeCount.toString()}</AiFillLike>
+                                                        <span className="inline mx-1 text-sm">{likeCount.toString()}</span>
                                                     </span>
                                                 )
                                             }
@@ -301,9 +236,9 @@ export default function Aes({ authData }: Props) {
                                                 !isLike && (
                                                     <span className="mt-2">
                                                         <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
-                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilViews}</span>
-                                                        <AiOutlineLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeClick}>{utilInfoDto.utilLikes}</AiOutlineLike>
-                                                        <span className="inline mx-1 text-sm">{utilInfoDto.utilLikes}</span>
+                                                        <span className="inline mx-1 text-sm">{viewCount.toString()}</span>
+                                                        <AiOutlineLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeClick}>{likeCount.toString()}</AiOutlineLike>
+                                                        <span className="inline mx-1 text-sm">{likeCount.toString()}</span>
                                                     </span>
                                                 )
                                             }
@@ -342,12 +277,3 @@ export default function Aes({ authData }: Props) {
         </MainDiv>
     )
 }
-
-export const getServerSideProps: GetServerSideProps<Props, ParsedUrlQuery> = async ({ req }) => {
-    const authData: AuthData = await fetchAuthData(req);
-    return {
-        props: {
-            authData,
-        },
-    };
-};

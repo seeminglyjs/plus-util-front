@@ -21,9 +21,9 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
       </button>
       {isOpen && 
       <div className="py-5 border-b border-gray-200">
-        <p className="mb-2 text-white">
+        <span className="mb-2 text-white">
             {children}
-        </p>
+        </span>
       </div>}
     </div>
   );
