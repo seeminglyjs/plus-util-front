@@ -7,18 +7,21 @@ import MainDiv from "@/components/Layout/MainDiv";
 import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { InputRegex } from "@/components/Regex/InputRegex";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { BiBong} from "react-icons/bi";
 import { SlidingWindowResponseDto } from "@/interface/Algorithm/Basic/SlidingWindowResponseDto";
+import { requestFetch } from "@/function/request/RequestFetch";
+import UtilLayout from "@/components/Util/UtilLayOut";
 
 
 export default function SlidingWindow() {
     const [slidingWindowArr, setSlidingWindowArr] = useState("");
     const [slidingWindowRange, setSlidingWindowRange] = useState("");
     const [resultData, setResultData] = useState("");
+
 
     function textChangeSlidingWindowArr(event: React.ChangeEvent<HTMLInputElement>) {
         let value = event.target.value;
@@ -37,7 +40,7 @@ export default function SlidingWindow() {
     }
 
     const slidingWindowRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/sliding/window`
+        const path = `/algorithm/sliding/window`
         if(slidingWindowArr === "") return
         if(slidingWindowRange === "") return
         const data = {
@@ -45,21 +48,8 @@ export default function SlidingWindow() {
             slidingWindowRange: slidingWindowRange
         }
 
-        if (data === null) return
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+        if (response !== null) {
             const slidingWindowResponseDto: SlidingWindowResponseDto = await response.json()
             setResultData(slidingWindowResponseDto.slidingWindowResult.toString());
         }
@@ -94,6 +84,9 @@ export default function SlidingWindow() {
                                                     확인
                                                 </button>
                                         </div>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

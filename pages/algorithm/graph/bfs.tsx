@@ -11,6 +11,8 @@ import { useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { BiBong } from "react-icons/bi";
 import { BfsResponseDto } from "@/interface/Algorithm/Grapth/BfsResponseDto";
+import { requestFetch } from "@/function/request/RequestFetch";
+import UtilLayout from "@/components/Util/UtilLayOut";
 
 
 export default function SlidingWindow() {
@@ -38,7 +40,7 @@ export default function SlidingWindow() {
     }
 
     const bfsRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/bfs/distance`
+        const path = `/algorithm/bfs/distance`
         if(bfsRow === "" || bfsCol === "" || bfsStartRow === "" || bfsStartCol === "" || bfsEndRow === "" || bfsEndCol === "") return
         if(bfsRow < bfsStartRow|| bfsCol < bfsStartCol || bfsEndRow < bfsStartRow || bfsEndCol < bfsStartCol) return
         
@@ -52,20 +54,8 @@ export default function SlidingWindow() {
         }
 
         if (data === null) return
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+        if (response !== null) {
             const BfsResponseDto: BfsResponseDto = await response.json()
             setResultData(BfsResponseDto.bfsSearchResult.toString());
         }
@@ -84,7 +74,7 @@ export default function SlidingWindow() {
                                 <div className={DefaultClassNames.FormDefaultParentDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">BFS 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
+                                            <span className={DefaultClassNames.FormNameSpan}>BFS 알고리즘</span><BiBong className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiBong>
                                         </div>
                                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                             <div>
@@ -117,6 +107,9 @@ export default function SlidingWindow() {
                                                 확인
                                             </button>
                                         </div>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

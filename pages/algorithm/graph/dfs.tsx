@@ -11,6 +11,8 @@ import { useState } from 'react';
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { BiBong } from "react-icons/bi";
 import { DfsResponseDto } from "@/interface/Algorithm/Grapth/DfsResponseDto";
+import UtilLayout from "@/components/Util/UtilLayOut";
+import { requestFetch } from "@/function/request/RequestFetch";
 
 
 export default function SlidingWindow() {
@@ -38,7 +40,7 @@ export default function SlidingWindow() {
     }
 
     const dfsRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/dfs/distance`
+        const path = `/algorithm/dfs/distance`
         if(dfsRow === "" || dfsCol === "" || dfsStartRow === "" || dfsStartCol === "" || dfsEndRow === "" || dfsEndCol === "") return
         if(dfsRow < dfsStartRow|| dfsCol < dfsStartCol || dfsEndRow < dfsStartRow || dfsEndCol < dfsStartCol) return
         
@@ -52,20 +54,8 @@ export default function SlidingWindow() {
         }
 
         if (data === null) return
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+        if (response !== null) {
             const dfsResponseDto: DfsResponseDto = await response.json()
             setResultData(dfsResponseDto.dfsSearchResult.toString());
         }
@@ -117,6 +107,9 @@ export default function SlidingWindow() {
                                                 확인
                                             </button>
                                         </div>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

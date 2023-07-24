@@ -7,7 +7,7 @@ import MainDiv from "@/components/Layout/MainDiv";
 import MainSubDiv from "@/components/Layout/MainSubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiLockOpen } from "react-icons/bi";
 import { BiKey } from "react-icons/bi";
 import Accordion from '../../components/Etc/Accordion';
@@ -16,6 +16,8 @@ import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
 import { RsaKeyMakeResponseDto } from "@/interface/Encrypt/Rsa/RsaKeyMakeResponseDto";
 import { RsaEncryptResponseDto } from "@/interface/Encrypt/Rsa/RsaEncryptResponseDto";
 import { RsaDecryptResponseDto } from "@/interface/Encrypt/Rsa/RsaDecryptResponseDto";
+import { requestFetch } from "@/function/request/RequestFetch";
+import UtilLayout from "@/components/Util/UtilLayOut";
 
 
 export default function Rsa() {
@@ -67,33 +69,20 @@ export default function Rsa() {
     }
 
     const rsaKeyMake = async () => {
-        const url = `${process.env.API_BASE_URL}/enc/rsa/key/make`
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-        })
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        const path = `/enc/rsa/key/make`
+        const response: Response | null = await requestFetch('GET', path, null, 'application/json')
+        if (response !== null) {
             const rsaKeyMakeResponseDto: RsaKeyMakeResponseDto = await response.json()
             setRsaPublicKey(rsaKeyMakeResponseDto.publicKey)
             setRsaPrivateKey(rsaKeyMakeResponseDto.privateKey)
         }
     }
 
-
     const rsaRequestSend = async () => {
         if (rsaRequestCheck()) {
             const requestType = rsaWay;
             let data = null
-            const url = `${process.env.API_BASE_URL}/enc/rsa/content/${requestType}`
+            const path = `/enc/rsa/content/${requestType}`
             if(requestType === 'encrypt'){
                 data = {
                     rsaPublicKey : rsaPublicKey,
@@ -107,21 +96,8 @@ export default function Rsa() {
             }
 
             if(data === null) return
-            
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                const errorMessage = `HTTP error! Status: ${response.status}`;
-                console.error(errorMessage);
-                return;
-            } else {
+            const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+            if (response !== null) {
                 if (requestType === "encrypt") {
                     const rsaEncryptResponseDto: RsaEncryptResponseDto = await response.json()
                     setRsaResult(rsaEncryptResponseDto.encryptContent)
@@ -157,7 +133,7 @@ export default function Rsa() {
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
-                                <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
+                                <div className={DefaultClassNames.FormMotherDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
                                             <span className="text-xl font-bold text-white text-center mr-1"> RSA 암호화</span><BiLockOpen className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiLockOpen>
@@ -180,7 +156,7 @@ export default function Rsa() {
                                                     <div className="absolute bottom-0 right-0 mr-2 mb-2">
                                                         <CopyButton text={rsaPublicKey}></CopyButton>
                                                     </div>
-                                                    <p className="text-xs mt-1 text-plusGreen100">{rsaPublicKey.length} Byte </p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{rsaPublicKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2 relative">
                                                     <label htmlFor="rsaPrivateKey" className={DefaultClassNames.FormDefaultChangeLabel}>RSA PrivateKey</label>
@@ -188,12 +164,12 @@ export default function Rsa() {
                                                     <div className="absolute bottom-0 right-0 mr-2 mb-2">
                                                         <CopyButton text={rsaPrivateKey}></CopyButton>
                                                     </div>
-                                                    <p className="text-xs mt-1 text-plusGreen100">{rsaPrivateKey.length} Byte </p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{rsaPrivateKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="rsaContent" className={DefaultClassNames.FormDefaultChangeLabel}>텍스트</label>
                                                     <textarea rows={10} onChange={rsaContentChange} id="aesContent" name="aesContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
-                                                    <p className="text-xs mt-1 text-plusGreen100">{rsaContent.length} 자  / 최대 5000자</p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{rsaContent.length} 자  / 최대 5000자</p>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -202,6 +178,9 @@ export default function Rsa() {
                                                 </button>
                                             </div>
                                         </form>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

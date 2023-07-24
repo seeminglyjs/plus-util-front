@@ -13,6 +13,8 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { BiBong} from "react-icons/bi";
 import { TwoPointerResponseDto } from "@/interface/Algorithm/Basic/TwoPointerResponseDto";
+import UtilLayout from "@/components/Util/UtilLayOut";
+import { requestFetch } from "@/function/request/RequestFetch";
 
 export default function TwoPointer() {
     const [twoPointerArr, setTwoPointerArr] = useState("");
@@ -36,7 +38,7 @@ export default function TwoPointer() {
     }
 
     const twoPointerRequestSend = async () => {
-        const url = `${process.env.API_BASE_URL}/algorithm/two/pointer/`
+        const path = `/algorithm/two/pointer/`
         if(twoPointerArr === "") return
         if(twoPointerTarget === "") return
         const data = {
@@ -44,27 +46,15 @@ export default function TwoPointer() {
             twoPointerTarget: twoPointerTarget
         }
 
-        if (data === null) return
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+        if (response !== null) {
             const TwoPointerResponseDto: TwoPointerResponseDto = await response.json()
             setResultData(TwoPointerResponseDto.twoPointerResult.toString());
         }
     }
 
     return (
+        
         <MainDiv>
             <MainSubDiv>
                 <ContentColDiv>
@@ -93,6 +83,9 @@ export default function TwoPointer() {
                                                     확인
                                                 </button>
                                         </div>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

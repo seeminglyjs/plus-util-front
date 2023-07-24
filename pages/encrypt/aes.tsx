@@ -15,18 +15,8 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 import { DefaultClassNames } from "@/components/ClassName/DefaultClassName";
 import { AesEncryptResponseDto } from '@/interface/Encrypt/Aes/AesEncryptResponseDto';
 import { AesDecryptResponseDto } from "@/interface/Encrypt/Aes/AesDecryptResponseDto";
-import { GetServerSideProps } from "next";
-import { UtilInfoDto } from '../../interface/Util/Info/UtilInfoDto';
-import { AiOutlineLike, AiFillLike, AiFillEye } from "react-icons/ai";
-import { useRouter } from 'next/router';
-import { Props } from "@/interface/Auth/Props";
-import { ParsedUrlQuery } from "querystring";
-import { AuthData } from "@/interface/Auth/AuthData";
-import { fetchAuthData } from "@/function/auth/GetAuthencation";
-import { UtilLikeResponseDto } from "@/interface/Encrypt/Aes/UtilLikeResponseDto";
-import { UtilLikeRevokeResponseDto } from "@/interface/Encrypt/Aes/UtilLikeRevokeResponseDto";
-import { getUtilInfoByUrlPath, likeUtilInfoCheck, utilInfoLike, utilInfoLikeRevoke, viewUtilInfoToday } from "@/function/util/UtilViewAndLikeFunction";
-
+import { requestFetch } from "@/function/request/RequestFetch";
+import UtilLayout from "@/components/Util/UtilLayOut";
 
 
 export default function Aes() {
@@ -36,11 +26,6 @@ export default function Aes() {
     const [aesIv, setAesIv] = useState("");
     const [aesContent, setAesContent] = useState("");
     const [aesResult, setAesResult] = useState("적절합 값을 먼저 입력해주세요.");
-    const [utilInfoDto, setUitlInfoDto] = useState({} as UtilInfoDto);
-    const [isLike, setIsLike] = useState(false);
-    const [likeCount, setLikeCount] = useState(BigInt(0));
-    const [viewCount, setViewCount] = useState(BigInt(0));
-    const router = useRouter();
 
     const aesWayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
@@ -84,29 +69,15 @@ export default function Aes() {
     const aesRequestSend = async () => {
         if (aesRequestCheck()) {
             const requestType = aesWay;
-
-            const url = `${process.env.API_BASE_URL}/enc/aes/${requestType}`
+            const path = `/enc/aes/${requestType}`
             const data = {
                 aesKey: aesKey,
                 aesIv: aesIv,
                 aesContent: aesContent,
                 type: aesType,
             };
-
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                const errorMessage = `HTTP error! Status: ${response.status}`;
-                console.error(errorMessage);
-                return;
-            } else {
+            const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+            if (response !== null) {
                 if (requestType === "encrypt") {
                     const aesEncryptResponseDto: AesEncryptResponseDto = await response.json()
                     setAesResult(aesEncryptResponseDto.encryptContent)
@@ -114,43 +85,9 @@ export default function Aes() {
                     const aesDecryptResponseDto: AesDecryptResponseDto = await response.json()
                     setAesResult(aesDecryptResponseDto.decryptContent)
                 }
-
             }
         }
     }
-
-    const settingUtilInfo =async () => {
-        const currentPath = router.pathname;
-        const utilInfoDto : UtilInfoDto = await getUtilInfoByUrlPath(currentPath)
-        setUitlInfoDto(utilInfoDto)
-        viewUtilInfoToday(utilInfoDto.utilNo)
-        const requestLike : boolean = await likeUtilInfoCheck();
-        setIsLike(requestLike) 
-        setViewCount(BigInt(utilInfoDto.utilViews))
-        setLikeCount(BigInt(utilInfoDto.utilLikes))
-    }
-
-    const handleLikeClick = async () => {
-       const utilLikeResponseDto : UtilLikeResponseDto | null = await utilInfoLike(utilInfoDto.utilNo);
-       if(utilLikeResponseDto !== null){
-            setIsLike(utilLikeResponseDto.like)
-            setLikeCount(utilLikeResponseDto.likeCount)
-       }
-    };
-
-    const handleLikeRevokeClick = async () => {
-        const utilLikeRevokeResponseDto: UtilLikeRevokeResponseDto | null = await utilInfoLikeRevoke(utilInfoDto.utilNo);
-        if(utilLikeRevokeResponseDto !== null){
-            setIsLike(utilLikeRevokeResponseDto.like)
-            setLikeCount(utilLikeRevokeResponseDto.likeCount)
-        }
-    };
-
-
-    useEffect(() => {
-        settingUtilInfo()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <MainDiv>
@@ -176,10 +113,10 @@ export default function Aes() {
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
-                                <div className="border border-gray-700 rounded-3xl py-8 px-4">
+                                <div className={DefaultClassNames.FormMotherDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1"> Aes 암호화</span><BiLockOpen className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiLockOpen>
+                                            <span className={DefaultClassNames.FormNameSpan}> Aes 암호화</span><BiLockOpen className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiLockOpen>
                                         </div>
                                         <form action="#">
                                             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -201,17 +138,17 @@ export default function Aes() {
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesKey" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Key</label>
                                                     <input onChange={aesKeyChange} type="text" name="aesKey" id="aesKey" className={DefaultClassNames.FormDefaultChangeInput} placeholder="32Byte" value={aesKey} />
-                                                    <p className="text-xs mt-1 text-white">{aesKey.length} Byte </p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{aesKey.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesIv" className={DefaultClassNames.FormDefaultChangeLabel}>Aes Iv</label>
                                                     <input onChange={aesIvChange} type="text" name="aesIv" id="aesIv" className={DefaultClassNames.FormDefaultChangeInput} placeholder="16Byte" value={aesIv} />
-                                                    <p className="text-xs mt-1 text-white">{aesIv.length} Byte </p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{aesIv.length} Byte </p>
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label htmlFor="aesContent" className={DefaultClassNames.FormDefaultChangeLabel}>텍스트</label>
                                                     <textarea rows={10} onChange={aesContentChange} id="aesContent" name="aesContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="테스트를 진행할 내용을 입력해주세요."></textarea>
-                                                    <p className="text-xs mt-1 text-white">{aesContent.length} 자  / 최대 5000자</p>
+                                                    <p className={DefaultClassNames.FormRegexSpanWhite}>{aesContent.length} 자  / 최대 5000자</p>
                                                 </div>
                                             </div>
                                             <div className="text-center">
@@ -219,30 +156,10 @@ export default function Aes() {
                                                     확인
                                                 </button>
                                             </div>
-
                                         </form>
-                                        <span>
-                                            {
-                                                isLike && (
-                                                    <span className="mt-2">
-                                                        <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
-                                                        <span className="inline mx-1 text-sm">{viewCount.toString()}</span>
-                                                        <AiFillLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeRevokeClick}>{likeCount.toString()}</AiFillLike>
-                                                        <span className="inline mx-1 text-sm">{likeCount.toString()}</span>
-                                                    </span>
-                                                )
-                                            }
-                                            {
-                                                !isLike && (
-                                                    <span className="mt-2">
-                                                        <AiFillEye className="inline mx-1 text-2xl"></AiFillEye>
-                                                        <span className="inline mx-1 text-sm">{viewCount.toString()}</span>
-                                                        <AiOutlineLike className="inline mx-1 text-2xl hover:cursor-pointer" onClick={handleLikeClick}>{likeCount.toString()}</AiOutlineLike>
-                                                        <span className="inline mx-1 text-sm">{likeCount.toString()}</span>
-                                                    </span>
-                                                )
-                                            }
-                                        </span>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

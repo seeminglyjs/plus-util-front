@@ -11,6 +11,8 @@ import { useState } from 'react';
 import { BiText } from "react-icons/bi";
 import CopyButton from "@/components/Etc/Button/CopyButton";
 import { StringSimilarityResponseDto } from "@/interface/Util/Text/StringSimilarityResponseDto";
+import { requestFetch } from "@/function/request/RequestFetch";
+import UtilLayout from "@/components/Util/UtilLayOut";
 
 export default function TextSimilarity() {
     const [firstContent, setFirstContent] = useState("");
@@ -38,32 +40,20 @@ export default function TextSimilarity() {
 
     const textSimilarityRequestSend = async () => {
         let data = null
-        let url = `${process.env.API_BASE_URL}/util/string/similarity`
+        let path = `/util/string/similarity`
         data = {
             firstContent: firstContent,
             secondContent: secondContent
         };
 
         if (data === null) return
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
+        const response: Response | null = await requestFetch('POST', path, data, 'application/json')
 
-        if (!response.ok) {
-            const errorMessage = `HTTP error! Status: ${response.status}`;
-            console.error(errorMessage);
-            return;
-        } else {
+        if (response !== null) {
             const stringSimilarityResponseDto: StringSimilarityResponseDto = await response.json()
             setResultData(stringSimilarityResponseDto.similarity);
         }
     }
-
 
     return (
         <MainDiv>
@@ -75,22 +65,22 @@ export default function TextSimilarity() {
                         </HalfAndHalfDiv>
                         <HalfDiv>
                             <div className="pt-48 py-15">
-                                <div className="border border-plusGreen100 rounded-3xl py-8 px-4">
+                                <div className={DefaultClassNames.FormMotherDiv}>
                                     <div className="py-8 px-4 mx-auto max-w-3xl">
                                         <div className="py-3 my-2 text-center">
-                                            <span className="text-xl font-bold text-white text-center mr-1">문자열 유사성 확인</span><BiText className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiText>
+                                            <span className={DefaultClassNames.FormNameSpan} >문자열 유사성 확인</span><BiText className="inline-block text-xl font-bold text-white mb-2 hover:animate-pulse"></BiText>
                                         </div>
 
                                         <div className="sm:col-span-2 mb-5">
-                                            <label htmlFor="firstContent" className="block mb-2 text-sm font-medium text-white">첫번째 문자열</label>
+                                            <label htmlFor="firstContent" className={DefaultClassNames.FormDefaultChangeLabel}>첫번째 문자열</label>
                                             <textarea rows={15} onChange={textFirstContetChange} id="firstContent" name="firstContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={firstContent}></textarea>
-                                            <p className="mt-1 text-xs text-plusGreen100">{firstContent.length} 자  / 최대 5000자 | {textByte1} Byte</p>
+                                            <p className={DefaultClassNames.FormRegexSpanWhite}>{firstContent.length} 자  / 최대 5000자 | {textByte1} Byte</p>
                                         </div>
 
                                         <div className="sm:col-span-2 mt-5">
-                                            <label htmlFor="secondContent" className="block mb-2 text-sm font-medium text-white">두번째 문자열</label>
+                                            <label htmlFor="secondContent" className={DefaultClassNames.FormDefaultChangeLabel}>두번째 문자열</label>
                                             <textarea rows={15} onChange={textSecondContetChange} id="secondContent" name="secondContent" className={DefaultClassNames.FormDefaultTextArea} placeholder="내용을 입력해주세요." value={secondContent}></textarea>
-                                            <p className="mt-1 text-xs text-plusGreen100">{secondContent.length} 자  / 최대 5000자 | {textByte2} Byte</p>
+                                            <p className={DefaultClassNames.FormRegexSpanWhite}>{secondContent.length} 자  / 최대 5000자 | {textByte2} Byte</p>
                                         </div>
 
                                         <div className="text-center">
@@ -98,6 +88,9 @@ export default function TextSimilarity() {
                                                 확인
                                             </button>
                                         </div>
+                                        <UtilLayout>
+
+                                        </UtilLayout>
                                     </div>
                                 </div>
                             </div>

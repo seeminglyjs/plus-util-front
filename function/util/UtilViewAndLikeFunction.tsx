@@ -46,8 +46,8 @@ export const viewUtilInfoToday = async (utilNo: bigint) => {
     }
 }
 
-export const likeUtilInfoCheck = async () => {
-    const url = `${process.env.API_BASE_URL}/util/info/like/check`
+export const likeUtilInfoCheck = async (utilNo:bigint) => {
+    const url = `${process.env.API_BASE_URL}/util/info/like/check/${utilNo}`
     const response = await fetch(url, {
         method: "GET",
         headers: {
