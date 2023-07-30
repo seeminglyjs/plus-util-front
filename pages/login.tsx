@@ -63,26 +63,26 @@ export default function Login({ authData }: Props) {
                                         <div className="mx-auto max-w-md p-10 border border-white rounded-3xl">
                                             <form method="post" action={`${process.env.API_BASE_URL}/login/action`}>
                                                 <div className="mb-6">
-                                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-plus200 ">아이디</label>
-                                                    <input onChange={handleChangeEmail} type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-plus200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@test.com" required />
+                                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-white ">아이디</label>
+                                                    <input onChange={handleChangeEmail} type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@test.com" required />
                                                     {vaildEmail && (
-                                                        <p className="text-xs text-plus200 py-1"></p>
+                                                        <p className="text-xs text-white py-1"></p>
                                                     )
                                                     }
                                                     {!vaildEmail && (
-                                                        <p className="text-xs text-plus200 py-1">아이디를 확인해주세요.</p>
+                                                        <p className="text-xs text-white py-1">아이디를 확인해주세요.</p>
                                                     )
                                                     }
                                                 </div>
                                                 <div className="mb-6">
-                                                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-plus200">비밀번호</label>
+                                                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">비밀번호</label>
                                                     <input onChange={handleChangePassword} type="password" id="userPassword" name="userPassword" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="********" required />
                                                     {vaildPassword && (
-                                                        <p className="text-xs text-plus200 py-1"></p>
+                                                        <p className="text-xs text-white py-1"></p>
                                                     )
                                                     }
                                                     {!vaildPassword && (
-                                                        <p className="text-xs text-plus200 py-1">비밀번호를 확인해주세요.</p>
+                                                        <p className="text-xs text-white py-1">비밀번호를 확인해주세요.</p>
                                                     )
                                                     }
                                                 </div>
@@ -90,7 +90,7 @@ export default function Login({ authData }: Props) {
                                                     <div className="flex items-center h-5">
                                                         <input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
                                                     </div>
-                                                    <label htmlFor="remember" className="ml-2 text-sm font-medium text-plus200">Remember me</label>
+                                                    <label htmlFor="remember" className="ml-2 text-sm font-medium text-white">Remember me</label>
                                                 </div> */}
                                                 <Button buttonName="로그인" disableCheck={vaildEmail && vaildPassword}></Button>
                                             </form>
