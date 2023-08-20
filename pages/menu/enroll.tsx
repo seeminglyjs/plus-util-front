@@ -60,7 +60,7 @@ interface MenuRes {
 
 
 export default function MenuList({ authData }: Props) {
-    const { name, authorities, authenticated } = authData
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const [dynamicInputs, setDynamicInputs] = useState<JSX.Element[]>([]);
     const [menuType, setMenuType] = useState("nav") //nav | head | menu
 
@@ -327,10 +327,10 @@ export default function MenuList({ authData }: Props) {
     }
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
-    }, [authData, authenticated, router])
+    }, [authData, authenticated, router, userRole])
 
     useEffect(() => {
         setDynamicInputs(navInput)
@@ -343,12 +343,12 @@ export default function MenuList({ authData }: Props) {
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ROLE_ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -377,7 +377,7 @@ export default function MenuList({ authData }: Props) {
                                                     </div>
                                                     <div className="text-center">
                                                         {
-                                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                            userRole === 'ROLE_ADMIN' && (
                                                                 <button onClick={enrollMenuInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                                     등록
                                                                 </button>

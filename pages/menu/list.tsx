@@ -127,7 +127,7 @@ export default function MenuList({ authData }: Props) {
                                         </div>
                                         <div className="text-right">
                                             {
-                                                authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                userRole === 'ROLE_ADMIN' && (
                                                     <span>
                                                         <Link href={`/menu/enroll`}>
                                                             <button className="border border-gray-400 rounded text-white py-1 px-2 mr-2"><BiPencil className="inline"></BiPencil> 메뉴등록</button>
