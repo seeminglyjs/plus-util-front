@@ -23,7 +23,7 @@ import { UtilInfoDto } from "@/interface/Util/Info/UtilInfoDto";
 import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
 
 export default function UtilDetail({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const [urlPath, setUrlPath] = useState("")
     const [category, setCategory] = useState("basic")
     const [utilSubject, setUtilSubject] = useState("")
@@ -179,22 +179,22 @@ export default function UtilDetail({ authData }: Props) {
     }
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
-    }, [authData, authenticated, router])
+    }, [authData, authenticated, router, userRole])
 
 
 
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && !callUtilInfo &&(
+                userRole !== 'ROLE_ADMIN' && !callUtilInfo &&(
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && callUtilInfo &&(
+                userRole === 'ROLE_ADMIN' && callUtilInfo &&(
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -241,7 +241,7 @@ export default function UtilDetail({ authData }: Props) {
                                                     </div>
                                                     <div className="text-center">
                                                         {
-                                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                            userRole === 'ROLE_ADMIN' && (
                                                                 <button onClick={enrollUtilInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                                     등록
                                                                 </button>
