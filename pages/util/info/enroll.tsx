@@ -22,7 +22,7 @@ import Loading from "@/components/Etc/Loading";
 import { AdminRoleResponseDto } from "@/interface/Admin/AdminRoleResponseDto";
 
 export default function UtilEnroll({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const [urlPath, setUrlPath] = useState("");
     const [category, setCategory] = useState("basic");
     const [utilSubject, setUtilSubject] = useState("");
@@ -135,20 +135,20 @@ export default function UtilEnroll({ authData }: Props) {
     }
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
-    }, [authData, authenticated, router])
+    }, [authData, authenticated, router, userRole])
 
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ROLE_ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -195,7 +195,7 @@ export default function UtilEnroll({ authData }: Props) {
                                                     </div>
                                                     <div className="text-center">
                                                         {
-                                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                            userRole === 'ROLE_ADMIN' && (
                                                                 <button onClick={enrollUtilInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                                     등록
                                                                 </button>

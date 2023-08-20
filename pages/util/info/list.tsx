@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { BiCaretLeft, BiCaretRight, BiPencil } from "react-icons/bi";
 
 export default function UtilList({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const router = useRouter()
     const [utilName, setUtilName] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
@@ -31,7 +31,7 @@ export default function UtilList({ authData }: Props) {
 
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
     }, [authData, authenticated, router])
@@ -71,12 +71,12 @@ export default function UtilList({ authData }: Props) {
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ROLE_ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -138,7 +138,7 @@ export default function UtilList({ authData }: Props) {
                                         </div>
                                         <div className="text-right">
                                             {
-                                                authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                userRole === 'ROLE_ADMIN' && (
                                                     <span>
                                                         <Link href={`/util/info/enroll?currentPage=${currentPage}`}>
                                                             <button className="border border-gray-400 rounded text-white py-1 px-2 mr-2"><BiPencil className="inline"></BiPencil> 유틸등록</button>
