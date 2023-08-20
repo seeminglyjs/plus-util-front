@@ -22,7 +22,7 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 
 
 export default function Login({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const {authenticated } = authData;
 
     const [email, setEmail] = useState("");
     const [vaildEmail, SetVaildEmail] = useState(false);

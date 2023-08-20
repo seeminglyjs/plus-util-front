@@ -21,7 +21,7 @@ import { BiPencil } from "react-icons/bi";
 
 
 export default function NoticeList({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
 
     const [currentPage, setCurrentPage] = useState(0);
     const [startPage, setStartPage] = useState(0);
@@ -127,7 +127,7 @@ export default function NoticeList({ authData }: Props) {
                                 </div>
                                     <div className="text-right">
                                         {
-                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                            authenticated && userRole === 'ADMIN' && (
                                                 <Link href={`/notice/write?currentPage=${currentPage}`}>
                                                     <button className="border border-plusOrange rounded text-plus200 hover:text-white py-1 px-2 mr-2"><BiPencil className="inline"></BiPencil> 글쓰기</button>
                                                 </Link>

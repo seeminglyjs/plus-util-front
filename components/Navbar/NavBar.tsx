@@ -3,13 +3,12 @@ import { useEffect, useState } from 'react';
 import NavBarLinks from "./NavBarLinks";
 import { BiMenu } from "react-icons/bi";
 import Button from './Button';
+import { AuthData } from "@/interface/Auth/AuthData";
+import { AuthTop } from "@/interface/Auth/AuthTop";
 
 
-interface Authenticated {
-    authenticated: boolean
-}
 
-export default function NavBar({ authenticated }: Authenticated) {
+export default function NavBar({ userNo, userEmail, userRole, authenticated }: AuthData) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -44,6 +43,8 @@ export default function NavBar({ authenticated }: Authenticated) {
                             <Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout" /></Link>
                             <span className="px-2"></span>
                             <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                            <span className="px-2"></span>
+                            <Link href={`/mypage/main`}><Button buttonName="MyPage" /></Link>
                         </span>
                     )
                     }

@@ -20,8 +20,7 @@ import { NoticeWriteResponse } from "@/interface/Notice/NoticeWriteResponse";
 import Loading from "@/components/Etc/Loading";
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
-    const { name, authorities, authenticated } = authData;
-
+    const { userNo, userEmail, userRole, authenticated } = authData;
 
     const router = useRouter()
     const currentNo = router.query.currentPage
@@ -99,21 +98,21 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     }
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
-    }, [authData, authenticated, router])
+    }, [authData, authenticated, userRole, router])
 
 
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+               userRole !== 'ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+               userRole === 'ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -138,7 +137,7 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                                         </div>
                                         <div>
                                             {
-                                                authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                                userRole === 'ADMIN' && (
                                                     <WriteButton fetchNoticeInfo={writeNotice} buttonContent="작성"></WriteButton>
                                                 )
                                             }

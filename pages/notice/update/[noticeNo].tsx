@@ -22,11 +22,11 @@ import Loading from "@/components/Etc/Loading";
 
 
 export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const [entriesNavigationTimingType, setEntriesNavigationTiming] = useState("")
     const router = useRouter()
     
-    if(authorities[0].authority !== "ROLE_ADMIN"){
+    if(userRole !== "ADMIN"){
         router.push("/notice/list")
     }
     const noticeNo = Number(router.query.noticeNo)
@@ -141,12 +141,12 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ADMIN' && (
                     <MainSubDiv>
                     <ContentColDiv>
                         <ContentRowDiv>
@@ -171,7 +171,7 @@ export default function NoticeWrite({ authData, cookie }: CookieAndAuth) {
                                     </div>
                                     <div>
                                         {
-                                            authenticated && authorities[0].authority === 'ROLE_ADMIN' && (
+                                            authenticated && userRole === 'ADMIN' && (
                                                 <WriteButton fetchNoticeInfo={updateNotice} buttonContent="수정"></WriteButton>
                                             )
                                         }
