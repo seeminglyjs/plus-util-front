@@ -23,7 +23,7 @@ import { InputRegex } from "@/components/Regex/InputRegex";
 
 
 export default function Join({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
 
     const [email, setEmail] = useState("");
     const [vaildEmail, SetVaildEmail] = useState(false);
