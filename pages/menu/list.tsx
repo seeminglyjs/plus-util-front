@@ -28,13 +28,13 @@ interface NavInfoDto {
 
 
 export default function MenuList({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const router = useRouter()
     const [navInfoList, setNavInfoList] = useState<NavInfoDto[]>([]);
 
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
     }, [authData, authenticated, router])
@@ -68,12 +68,12 @@ export default function MenuList({ authData }: Props) {
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ROLE_ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
