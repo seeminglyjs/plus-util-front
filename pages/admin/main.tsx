@@ -16,24 +16,24 @@ import { ParsedUrlQuery } from "querystring";
 import { useEffect } from "react";
 
 export default function AdminMian({ authData }: Props) {
-    const { name, authorities, authenticated } = authData;
+    const { userNo, userEmail, userRole, authenticated } = authData;
     const router = useRouter()
 
     useEffect(() => {
-        if (authData.authorities[0].authority !== 'ROLE_ADMIN') {
+        if (userRole !== 'ROLE_ADMIN') {
             router.push('/')
         }
-    }, [authData, authenticated, router])
+    }, [authData, authenticated, router, userRole])
 
     return (
         <MainDiv>
             {
-                authData.authorities[0].authority !== 'ROLE_ADMIN' && (
+                userRole !== 'ROLE_ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                authData.authorities[0].authority === 'ROLE_ADMIN' && (
+                userRole === 'ROLE_ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <div className="pt-24 pb-15">
