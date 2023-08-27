@@ -13,15 +13,8 @@ import ContentColDiv from "@/components/Layout/ContentColDiv";
 import ContentRowDiv from "@/components/Layout/ContentRowDiv";
 import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
-
-
-interface MyPageDto {
-    userNo: number
-    nickName: string
-    description: string
-    viewCnt: bigint
-    likeCnt: bigint
-}
+import Link from "next/link";
+import { MyPageDto } from "@/interface/myPage/MyPageDto";
 
 
 export default function Mypage({ authData, cookie }: CookieAndAuth) {
@@ -48,6 +41,7 @@ export default function Mypage({ authData, cookie }: CookieAndAuth) {
                     return;
                 } else {
                     const myPageDto: MyPageDto = await response.json()
+                    if(myPageDto.userNo == -1) router.push("/")
                     console.log(myPageDto)
                     if (myPageDto.userNo != -1) {
                         setMyPageInfo(myPageDto);
@@ -88,12 +82,28 @@ export default function Mypage({ authData, cookie }: CookieAndAuth) {
                                                 <h5 className="mb-1 text-l font-medium text-white">{myPageInfo.nickName}</h5>
                                                 <span className="text-sm text-gray-400">{myPageInfo.description}</span>
                                                 <div>
-
+                                                    {
+                                                        myPageInfo.userName && myPageInfo.nameShow === 'y' && (
+                                                            <div>
+                                                            <span className="text-sm text-gray-400">이름 : {myPageInfo.userName}</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {
+                                                        myPageInfo.userPhone && myPageInfo.phoneShow === 'y' && (
+                                                            <div>
+                                                            <span className="text-sm text-gray-400">연락처 : {myPageInfo.userPhone}</span>
+                                                            </div>
+                                                        )
+                                                    }
                                                 </div>
                                                 {
                                                     userNo == myPageInfo.userNo && (
-                                                        <div className="flex mt-4 space-x-3 md:mt-6">
-                                                        <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">정보 수정</a>
+                                                        <div className="flex mt-4 space-x-3 md:mt-6">  
+                                                         <Link href={`/mypage/modify`}>
+                                                            <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">정보 수정
+                                                            </span>
+                                                          </Link> 
                                                     </div>
                                                     )
                                                 }
