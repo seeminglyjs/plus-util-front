@@ -26,6 +26,29 @@ export const requestFetch = async (method : string, path: string, data : object|
         });
     
         return checkResponse(response)
+    }else if(method === 'PUT' && data !== null){
+        const url = `${process.env.API_BASE_URL}${path}`
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': contentType,
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+        return checkResponse(response)
+    }else if(method === 'PUT' && data === null){
+        const url = `${process.env.API_BASE_URL}${path}`
+        
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': contentType,
+            },
+            credentials: 'include',
+        });
+        return checkResponse(response)
     }
 
     return null

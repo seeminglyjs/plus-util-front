@@ -124,6 +124,7 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
                         <ContentColDiv>
                             <ContentRowDiv>
                                 <MajoritySubDiv>
+                                
                                 </MajoritySubDiv>
 
                                 <MajorityDiv>
@@ -171,7 +172,9 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
                                         </div>
                                     </div>
                                 </MajorityDiv>
+                                
                                 <MajoritySubDiv>
+                                
                                 </MajoritySubDiv>
                             </ContentRowDiv>
                         </ContentColDiv>

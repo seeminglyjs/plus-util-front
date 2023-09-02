@@ -15,12 +15,24 @@ import MajoritySubDiv from "@/components/Layout/MajoritySubDiv";
 import MajorityDiv from "@/components/Layout/MajorityDiv";
 import Link from "next/link";
 import { MyPageDto } from "@/interface/myPage/MyPageDto";
+import { AiFillEye, AiFillLike } from "react-icons/ai";
+import { requestFetch } from "@/function/request/RequestFetch";
 
 
 export default function Mypage({ authData, cookie }: CookieAndAuth) {
     const { userNo, userEmail, userRole, authenticated } = authData;
     const [myPageInfo, setMyPageInfo] = useState({} as MyPageDto)
     const router = useRouter()
+
+    const myPageLikeClick = async () => {
+        if(myPageInfo !== null && myPageInfo !== undefined){
+            const response: Response | null = await requestFetch("PUT",`/my/like/plus?userNo=${myPageInfo.userNo}`, null, 'application/json');
+            if (response !== null) {
+                const myPageDto: MyPageDto = await response.json()
+                setMyPageInfo(myPageDto)
+            }
+        }
+    };
 
     useEffect(() => {
         async function getMyPage(userNo: number) {
@@ -42,7 +54,6 @@ export default function Mypage({ authData, cookie }: CookieAndAuth) {
                 } else {
                     const myPageDto: MyPageDto = await response.json()
                     if(myPageDto.userNo == -1) router.push("/")
-                    console.log(myPageDto)
                     if (myPageDto.userNo != -1) {
                         setMyPageInfo(myPageDto);
                     } else {
@@ -74,9 +85,9 @@ export default function Mypage({ authData, cookie }: CookieAndAuth) {
                                 <MajorityDiv>
                                     <div className="flex justify-center pt-48 py-15">
                                         <div className="w-full max-w-sm bg-gray-800 border-gray-700 border rounded-md">
-                                            <div className="flex justify-center px-4 pt-4">
-                                                <span className="mx-2 text-sm text-gray-400">View : {myPageInfo.viewCnt.toString()}</span>
-                                                <span className="text-sm mx-2 text-gray-400">Like : {myPageInfo.likeCnt.toString()}</span>
+                                            <div className="flex justify-center px-4 pt-4 mb-3">
+                                                <span className="mx-2 text-sm text-gray-400"><AiFillEye className="inline mx-1 text-2xl"></AiFillEye> : {myPageInfo.viewCnt.toString()}</span>
+                                                <span className="text-sm mx-2 text-gray-400"> <AiFillLike className="inline mx-1 text-2xl hover:cursor-pointer hover:animate-bounce" onClick={myPageLikeClick}></AiFillLike> : {myPageInfo.likeCnt.toString()}</span>
                                             </div>
                                             <div className="flex flex-col items-center pb-10">
                                                 <h5 className="mb-1 text-l font-medium text-white">{myPageInfo.nickName}</h5>
