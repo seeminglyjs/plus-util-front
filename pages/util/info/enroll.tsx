@@ -135,7 +135,7 @@ export default function UtilEnroll({ authData }: Props) {
     }
 
     useEffect(() => {
-        if (userRole !== 'ROLE_ADMIN') {
+        if (userRole !== 'ADMIN') {
             router.push('/') // Redirect to dashboard if authenticated
         }
     }, [authData, authenticated, router, userRole])
@@ -143,12 +143,12 @@ export default function UtilEnroll({ authData }: Props) {
     return (
         <MainDiv>
             {
-                userRole !== 'ROLE_ADMIN' && (
+                userRole !== 'ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                userRole === 'ROLE_ADMIN' && (
+                userRole === 'ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -195,7 +195,7 @@ export default function UtilEnroll({ authData }: Props) {
                                                     </div>
                                                     <div className="text-center">
                                                         {
-                                                            userRole === 'ROLE_ADMIN' && (
+                                                            userRole === 'ADMIN' && (
                                                                 <button onClick={enrollUtilInfo} type="button" className={DefaultClassNames.FormDefaultSendButton}>
                                                                     등록
                                                                 </button>

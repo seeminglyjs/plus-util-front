@@ -71,12 +71,12 @@ export default function UtilList({ authData }: Props) {
     return (
         <MainDiv>
             {
-                userRole !== 'ROLE_ADMIN' && (
+                userRole !== 'ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                userRole === 'ROLE_ADMIN' && (
+                userRole === 'ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <ContentRowDiv>
@@ -138,7 +138,7 @@ export default function UtilList({ authData }: Props) {
                                         </div>
                                         <div className="text-right">
                                             {
-                                                userRole === 'ROLE_ADMIN' && (
+                                                userRole === 'ADMIN' && (
                                                     <span>
                                                         <Link href={`/util/info/enroll?currentPage=${currentPage}`}>
                                                             <button className="border border-gray-400 rounded text-white py-1 px-2 mr-2"><BiPencil className="inline"></BiPencil> 유틸등록</button>

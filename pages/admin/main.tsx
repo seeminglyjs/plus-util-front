@@ -20,7 +20,7 @@ export default function AdminMian({ authData }: Props) {
     const router = useRouter()
 
     useEffect(() => {
-        if (userRole !== 'ROLE_ADMIN') {
+        if (userRole !== 'ADMIN') {
             router.push('/')
         }
     }, [authData, authenticated, router, userRole])
@@ -28,12 +28,12 @@ export default function AdminMian({ authData }: Props) {
     return (
         <MainDiv>
             {
-                userRole !== 'ROLE_ADMIN' && (
+                userRole !== 'ADMIN' && (
                     <Loading></Loading>
                 )
             }
             {
-                userRole === 'ROLE_ADMIN' && (
+                userRole === 'ADMIN' && (
                     <MainSubDiv>
                         <ContentColDiv>
                             <div className="pt-24 pb-15">
