@@ -14,7 +14,8 @@ export const DefaultClassNames = {
     FormNameSpan:"text-xl font-bold text-white text-center mr-1",
 
     listGroupDefaultDiv : "w-90 text-sm font-medium text-white border-gray-700 rounded-lg",
-    listGroupDefaultA : "block w-full px-4 py-2 border-b border-gray-700 rounded-t-lg cursor-pointer hover:text-blue-300 focus:outline-none focus:ring-2",
+    listGroupDefaultA : "block w-full px-4 py-2 border-b border-gray-700 rounded-t-lg cursor-pointer hover:text-blue-300 focus:outline-none",
+    listGroupDefaultASelected : "block w-full px-4 py-2 border-b border-gray-700 rounded-t-lg cursor-pointer text-blue-300 focus:outline-none",
 
     indexUtilTopListP : "text-lg font-normal text-gray-400 mb-2 transition-transform duration-500 hover:scale-105 hover:cursor-pointer",
     indexUtilTopLikeA : "text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md bg-gray-700 text-red-400 mb-2",
