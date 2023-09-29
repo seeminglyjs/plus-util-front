@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - run: touch ./.env.local
+      - run: echo "${{ secrets.KEY_PROPERTIES }}" > ./.env.local
       - uses: actions/setup-node@v3
         with:
           node-version: 16
