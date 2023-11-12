@@ -43,6 +43,8 @@ const nextConfig = {
   reactStrictMode: false,
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
+    AES_256_KEY: process.env.AES_256_KEY,
+    AES_256_IV: process.env.AES_256_IV,
   },
 
 

@@ -19,6 +19,7 @@ import { fetchAuthData } from "@/function/auth/GetAuthencation";
 import Footer from '../components/Footer/Footer';
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { InputRegex } from "@/components/Regex/InputRegex";
+import { encrypt } from '../function/crypto/crypto';
 
 
 export default function Login({ authData }: Props) {
@@ -26,8 +27,12 @@ export default function Login({ authData }: Props) {
 
     const [email, setEmail] = useState("");
     const [vaildEmail, SetVaildEmail] = useState(false);
-    function handleChangeEmail
-        (event: React.ChangeEvent<HTMLInputElement>) {
+    
+
+    const aesKey = process.env.AES_256_KEY;
+    const aesIv = process.env.AES_256_IV;
+
+    function handleChangeEmail(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setEmail(value);
         SetVaildEmail(InputRegexFunction(value, InputRegex.LoginEmail));
@@ -39,6 +44,19 @@ export default function Login({ authData }: Props) {
         const value = event.target.value;
         setPassword(value);
         setVaildPassword(InputRegexFunction(value, InputRegex.LoginPassword));
+    }
+
+    function encryptOnsubmit(event: React.FormEvent<HTMLFormElement>){
+        if(aesKey && aesIv && vaildEmail && vaildPassword){
+            const userEmailInput = document.getElementById("userEmail")  as HTMLInputElement;
+            if (userEmailInput) {
+                userEmailInput.type = "password"; // 타입을 "password"로 변경
+              }
+            setEmail(encrypt( email, aesKey, aesIv));
+            setPassword(encrypt(password, aesKey, aesIv));
+        }else{
+            event.preventDefault();
+        }
     }
 
     const router = useRouter()
@@ -61,10 +79,10 @@ export default function Login({ authData }: Props) {
                                 {!authenticated && (
                                     <div className="pt-48 py-64">
                                         <div className="mx-auto max-w-md p-10 border border-white rounded-3xl">
-                                            <form method="post" action={`${process.env.API_BASE_URL}/login/action`}>
+                                            <form method="post" action={`${process.env.API_BASE_URL}/login/action`} onSubmit={encryptOnsubmit}>
                                                 <div className="mb-6">
                                                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-white ">아이디</label>
-                                                    <input onChange={handleChangeEmail} type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@test.com" required />
+                                                    <input onChange={handleChangeEmail} type="email" id="userEmail" name="userEmail" className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@test.com"  value={email} required />
                                                     {vaildEmail && (
                                                         <p className="text-xs text-white py-1"></p>
                                                     )
@@ -76,7 +94,7 @@ export default function Login({ authData }: Props) {
                                                 </div>
                                                 <div className="mb-6">
                                                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">비밀번호</label>
-                                                    <input onChange={handleChangePassword} type="password" id="userPassword" name="userPassword" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="********" required />
+                                                    <input onChange={handleChangePassword} type="password" id="userPassword" name="userPassword" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="********" value={password} required />
                                                     {vaildPassword && (
                                                         <p className="text-xs text-white py-1"></p>
                                                     )

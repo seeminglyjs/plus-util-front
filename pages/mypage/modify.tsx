@@ -18,6 +18,8 @@ import { requestFetch } from "@/function/request/RequestFetch";
 import HalfAndHalfDiv from "@/components/Layout/HalfAndHalfDiv";
 import HalfDiv from "@/components/Layout/HalfDiv";
 import { MouseEvent } from 'react';
+import { InputRegex } from "@/components/Regex/InputRegex";
+import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 
 
 export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
@@ -26,6 +28,11 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
     const [userPhone, setUserPhone] = useState("");
     const [nickName, setNickName] = useState("");
     const [description, setDescription] = useState("");
+
+    const [nowPassword, setNowPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordCheck, setNewPasswordCheck] = useState("");
+
     const [myPageInfo, setMyPageInfo] = useState({} as MyPageDto)
 
     const [showMypageModify, setShowMypageModify] = useState(true);
@@ -56,6 +63,23 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
         if (value.length <= 200) setDescription(value);
     }
 
+
+    const nowPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let value = event.target.value;
+        if (value.length <= 20) setNowPassword(value);
+    }
+
+    const newPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let value = event.target.value;
+        if (value.length <= 20) setNewPassword(value);
+    }
+
+    const newPasswordCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let value = event.target.value;
+        if (value.length <= 20) setNewPasswordCheck(value);
+    }
+
+
     const showMyPageModifyFn = async (event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault(); //a 태그 동작 막기
         setShowSecurityModify(false)
@@ -64,8 +88,6 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
 
         setShowMypageModify(true)
         setShowMypageModifyClassName(DefaultClassNames.listGroupDefaultASelected)
-
-
     }
 
     const showSecurityModifyFn = async (event: MouseEvent<HTMLAnchorElement>) => {
@@ -86,6 +108,8 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
         setShowChangePassword(true)
     }
 
+
+
     const myPageModifyRequestSend = async () => {
         const path = `/my/modify/page`
         const data = {
@@ -103,6 +127,27 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
             alert("마이페이지 수정 실패")
         }
     }
+
+    const passwordChangeSend = async () => {
+        if(newPassword === newPasswordCheck && InputRegexFunction(newPassword, InputRegex.LoginPassword)){
+        // const path = `/my/modify/page`
+        // const data = {
+        //     userNo: userNo,
+        //     userName: userName,
+        //     userPhone: userPhone,
+        //     nickName: nickName,
+        //     description: description,
+        //     role: userRole,
+        // }
+        // const response: Response | null = await requestFetch('POST', path, data, 'application/json')
+        // if (response !== null) {
+        //     router.push('/mypage/main') // Redirect to dashboard if authenticated
+        // } else {
+        //     alert("마이페이지 수정 실패")
+        // }
+        }
+    }
+
 
     useEffect(() => {
         async function getMyPage(userNo: number) {
@@ -225,9 +270,9 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
                                                                 </h5>
                                                                 <ul className="my-4 space-y-3">
                                                                     <li>
-                                                                        <a href="#" className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
+                                                                        <a onClick={showChangePasswordFn} href="#" className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
                                                                             <span className="flex-1 ml-3 whitespace-nowrap">비밀번호 변경</span>
-                                                                            <span className="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400">Popular</span>
+                                                                            <span className="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400">설정</span>
                                                                         </a>
                                                                     </li>
                                                                     {/* <li>
@@ -271,24 +316,24 @@ export default function MypageModiy({ authData, cookie }: CookieAndAuth) {
                                                     <form action="#">
                                                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                                             <div className="sm:col-span-2">
-                                                                <label htmlFor="nickName" className={DefaultClassNames.FormDefaultChangeLabel}>현재 비밀번호</label>
-                                                                <input onChange={nickNameChange} type="text" name="nickName" id="nickName" className={DefaultClassNames.FormDefaultChangeInput} placeholder="닉네임" value={nickName || ''} />
+                                                                <label htmlFor="nowPassword" className={DefaultClassNames.FormDefaultChangeLabel}>현재 비밀번호</label>
+                                                                <input onChange={nowPasswordChange} type="password" name="nowPassword" id="nowPassword" className={DefaultClassNames.FormDefaultChangeInput} placeholder="현재 비밀번호" value={nowPassword || ''}/>
                                                                 <p className={DefaultClassNames.FormRegexSpanWhite}>{nickName.length} 자 </p>
                                                             </div>
                                                             <div className="sm:col-span-2">
-                                                                <label htmlFor="nickName" className={DefaultClassNames.FormDefaultChangeLabel}>변경 비밀번호</label>
-                                                                <input onChange={nickNameChange} type="text" name="nickName" id="nickName" className={DefaultClassNames.FormDefaultChangeInput} placeholder="닉네임" value={nickName || ''} />
+                                                                <label htmlFor="newPassword" className={DefaultClassNames.FormDefaultChangeLabel}>변경 비밀번호</label>
+                                                                <input onChange={newPasswordChange} type="password" name="newPassword" id="newPassword" className={DefaultClassNames.FormDefaultChangeInput} placeholder="변경 비밀번호" value={newPassword || ''} />
                                                                 <p className={DefaultClassNames.FormRegexSpanWhite}>{nickName.length} 자 </p>
                                                             </div>
                                                             <div className="sm:col-span-2">
-                                                                <label htmlFor="nickName" className={DefaultClassNames.FormDefaultChangeLabel}>변경 비밀번호 확인</label>
-                                                                <input onChange={nickNameChange} type="text" name="nickName" id="nickName" className={DefaultClassNames.FormDefaultChangeInput} placeholder="닉네임" value={nickName || ''} />
+                                                                <label htmlFor="newPasswordCheck" className={DefaultClassNames.FormDefaultChangeLabel}>변경 비밀번호 확인</label>
+                                                                <input onChange={newPasswordCheckChange} type="password" name="newPasswordCheck" id="newPasswordCheck" className={DefaultClassNames.FormDefaultChangeInput} placeholder="변경 비밀번호 확인" value={newPasswordCheck || ''} />
                                                                 <p className={DefaultClassNames.FormRegexSpanWhite}>{nickName.length} 자 </p>
                                                             </div>
                                                         </div>
                                                         <div className="text-center">
-                                                            <button onClick={myPageModifyRequestSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
-                                                                수정
+                                                            <button onClick={passwordChangeSend} type="button" className={DefaultClassNames.FormDefaultSendButton}>
+                                                                변경
                                                             </button>
                                                         </div>
                                                     </form>

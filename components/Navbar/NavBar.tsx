@@ -42,7 +42,9 @@ export default function NavBar({ userNo, userEmail, userRole, authenticated }: A
                         <span>
                             <Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout" /></Link>
                             <span className="px-2"></span>
-                            <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                            {userRole === 'ADMIN' && (
+                                <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                            )}
                             <span className="px-2"></span>
                             <Link href={`/mypage/main`}><Button buttonName="MyPage" /></Link>
                         </span>
@@ -70,7 +72,10 @@ export default function NavBar({ userNo, userEmail, userRole, authenticated }: A
                             <span>
                                 <Link href={`${process.env.API_BASE_URL}/logout`}><Button buttonName="logout" /></Link>
                                 <span className="px-2"></span>
+                                {userRole === 'ADMIN' && (
                                 <Link href={`/admin/main`}><Button buttonName="ADMIN" /></Link>
+                                )}
+                                <Link href={`/mypage/main`}><Button buttonName="MyPage" /></Link>
                             </span>
                         )
                         }

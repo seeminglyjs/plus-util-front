@@ -45,8 +45,7 @@ export default function HomePage({ datas }: any) {
                   )
                   }
 
-                  {
-                    topUtilArr.map((topUtil, index) => (
+                  {topUtilArr && topUtilArr.map((topUtil, index) => (
                       <p key={topUtil.utilNo.toString()} className={DefaultClassNames.indexUtilTopListP}>
                           <Link href={topUtil.urlPath}><span className="mx-1">{index + 1}. <b>[{topUtil.subject}]</b> {topUtil.utilName} </span>
                           </Link>
@@ -125,7 +124,10 @@ export default function HomePage({ datas }: any) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({req}:any) {
+    // 1. 클라이언트에서 서버로 전달된 Bearer 토큰을 추출
+  const authorizationHeader = req.headers.authorization;
+  console.log(authorizationHeader)
   const res1 = await api.get("/home")
   const gitData: GitData = await res1.data
 

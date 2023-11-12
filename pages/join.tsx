@@ -20,6 +20,8 @@ import { JoinResult } from '../interface/Join/JoinResult';
 import DefaultModal from '../components/Modal/DefaultModal';
 import { InputRegexFunction } from "@/components/Regex/InputRegexFunction";
 import { InputRegex } from "@/components/Regex/InputRegex";
+import { requestFetch } from "@/function/request/RequestFetch";
+import { encrypt } from "@/function/crypto/crypto";
 
 
 export default function Join({ authData }: Props) {
@@ -38,23 +40,26 @@ export default function Join({ authData }: Props) {
     const [vaildPassword, setVaildPassword] = useState(false);
     function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
-        setPassword(value);
-        setVaildPassword(InputRegexFunction(value,InputRegex.LoginPassword));
+        if (value.length <= 30){
+            setPassword(value);
+            setVaildPassword(InputRegexFunction(value,InputRegex.LoginPassword));
+        }
     }
 
     const [joinVaild, setJoinVaild] = useState(false);
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (vaildEmail && vaildPassword) {
-            const url = `${process.env.API_BASE_URL}/join/action?userEmail=${email}&userPassword=${password}`
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    Accept: 'application/json',
-                }
-            })
+        if (process.env.AES_256_KEY && process.env.AES_256_IV && vaildEmail && vaildPassword) {
+            const aesKey = process.env.AES_256_KEY;
+            const aesIv = process.env.AES_256_IV;
+            const path = `/join/action`
+            const data = {
+                userEmail: encrypt(email, aesKey, aesIv),
+                userPassword: encrypt(password, aesKey, aesIv)
+            }
+            const response: Response | null = await requestFetch('POST', path, data, 'application/json')
 
-            if (!response.ok) {
+            if (response == null || !response.ok) {
                 throw new Error('Failed to fetch auth data');
             }
 
